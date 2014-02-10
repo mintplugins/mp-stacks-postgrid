@@ -33,8 +33,8 @@ See full instructions at http://moveplugins.com/doc/mp-stacks
 
 == Changelog ==
 
-= 1.0.0.1 = Februyary 10, 2014
+= 1.0.0.1 = February 10, 2014
 * Changed hook for metabox to be after taxonomies are created - so we can choose from ALL taxonomies. From ‘plugins_loaded’ to ‘widgets_init’.
 
-= 1.0.0.0 = Februyary 9, 2014
+= 1.0.0.0 = February 9, 2014
 * Original release
