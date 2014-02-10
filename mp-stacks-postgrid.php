@@ -3,7 +3,7 @@
 Plugin Name: MP Stacks + PostGrid
 Plugin URI: http://moveplugins.com
 Description: Content-Type Add-on for MP Stacks which displays posts from WordPress in a grid.
-Version: 1.0.0.0
+Version: 1.0.0.1
 Author: Move Plugins
 Author URI: http://moveplugins.com
 Text Domain: mp_stacks_postgrid
