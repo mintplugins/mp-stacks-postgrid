@@ -25,7 +25,7 @@
 			'software_name' => 'MP Stacks PostGrid', //<- The exact name of this Plugin.
 			'software_api_url' => 'http://moveplugins.com',//The URL where PostGrid and mp_repo are installed and checked
 			'software_filename' => 'mp-stacks-postgrid.php',
-			'software_licensed' => true, //<-Boolean
+			'software_licensed' => false, //<-Boolean
 		);
 		
 		//Since this is a plugin, call the Plugin Updater class

@@ -2,9 +2,9 @@
 Contributors: johnstonphilip
 Donate link: http://moveplugins.com/
 Tags: message bar, header
-Requires at least: beta1.0.0.0
-Tested up to: beta1.0.4.3
-Stable tag: beta1.0.4.3
+Requires at least: 3.5
+Tested up to: 3.8.1
+Stable tag: 1.0.0.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -33,8 +33,11 @@ See full instructions at http://moveplugins.com/doc/mp-stacks
 
 == Changelog ==
 
+= 1.0.0.2 = February 20, 2014
+* Change postgrid to free plugin 
+
 = 1.0.0.1 = February 10, 2014
-* Changed hook for metabox to be after taxonomies are created - so we can choose from ALL taxonomies. From ‘plugins_loaded’ to ‘widgets_init’.
+* Changed hook for metabox to be after taxonomies are created - so we can choose from ALL taxonomies. From 'plugins_loaded' to 'widgets_init'.
 
 = 1.0.0.0 = February 9, 2014
 * Original release

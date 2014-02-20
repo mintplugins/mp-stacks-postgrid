@@ -99,12 +99,6 @@ function mp_stacks_brick_content_output_postgrid($default_content_output, $mp_st
 			}
 			
 			$postgrid_output .=' 
-			}
-			
-			@media screen and (max-width: 600px){
-				.mp-stacks-postgrid-item{ 
-					width:' . '100%;
-				}
 			}';
 			
 			$postgrid_output .= $postgrid_alignment != 'left' ? NULL : '.mp-stacks-postgrid-icon{ margin: 0px 10px 0px 0px; }';
