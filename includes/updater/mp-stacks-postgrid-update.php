@@ -7,7 +7,7 @@
  * @package    MP Stacks PostGrid
  * @subpackage Functions
  *
- * @copyright  Copyright (c) 2013, Move Plugins
+ * @copyright  Copyright (c) 2014, Mint Plugins
  * @license    http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @author     Philip Johnston
  */
@@ -19,11 +19,11 @@
  * @since    1.0.0
  * @return   void
  */
- if (!function_exists('mp_stacks_features_update')){
-	function mp_stacks_features_update() {
+ if (!function_exists('mp_stacks_postgrid_update')){
+	function mp_stacks_postgrid_update() {
 		$args = array(
 			'software_name' => 'MP Stacks PostGrid', //<- The exact name of this Plugin.
-			'software_api_url' => 'http://moveplugins.com',//The URL where PostGrid and mp_repo are installed and checked
+			'software_api_url' => 'http://mintplugins.com',//The URL where PostGrid and mp_repo are installed and checked
 			'software_filename' => 'mp-stacks-postgrid.php',
 			'software_licensed' => false, //<-Boolean
 		);
@@ -32,4 +32,4 @@
 		$mp_stacks_features_plugin_updater = new MP_CORE_Plugin_Updater($args);
 	}
  }
-add_action( 'init', 'mp_stacks_features_update' );
+add_action( 'init', 'mp_stacks_postgrid_update' );

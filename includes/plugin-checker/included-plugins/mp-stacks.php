@@ -7,7 +7,7 @@
  * @package    MP Core
  * @subpackage Functions
  *
- * @copyright  Copyright (c) 2013, Move Plugins
+ * @copyright  Copyright (c) 2014, Mint Plugins
  * @license    http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @author     Philip Johnston
  */
@@ -16,7 +16,7 @@
 * Check to make sure the MP Stacks Plugin is installed.
 *
 * @since    1.0.0
-* @link     http://moveplugins.com/doc/plugin-checker-class/
+* @link     http://mintplugins.com/doc/plugin-checker-class/
 * @return   array $plugins An array of plugins to be installed. This is passed in through the mp_core_check_plugins filter.
 * @return   array $plugins An array of plugins to be installed. This is passed to the mp_core_check_plugins filter. (see link).
 */
@@ -28,8 +28,8 @@ if (!function_exists('mp_stacks_plugin_check')){
 				'plugin_name' => 'MP Stacks',
 				'plugin_message' => __('You require the MP Stacks plugin. Install it here.', 'mp_stacks_postgrid'),
 				'plugin_filename' => 'mp-stacks.php',
-				'plugin_download_link' => 'http://moveplugins.com/stacks/mp-stacks/?downloadfile=true',
-				'plugin_info_link' => 'http://moveplugins.com/plugins/mp-stacks',
+				'plugin_download_link' => 'http://mintplugins.com/repo/mp-stacks/?downloadfile=true',
+				'plugin_info_link' => 'http://mintplugins.com/plugins/mp-stacks',
 				'plugin_group_install' => true,
 				'plugin_required' => true,
 				'plugin_wp_stacks' => true,

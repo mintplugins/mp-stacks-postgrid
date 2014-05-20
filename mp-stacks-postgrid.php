@@ -1,21 +1,21 @@
 <?php
 /*
 Plugin Name: MP Stacks + PostGrid
-Plugin URI: http://moveplugins.com
+Plugin URI: http://mintplugins.com
 Description: Displays posts from WordPress in a grid in a Brick
-Version: 1.0.0.2
-Author: Move Plugins
-Author URI: http://moveplugins.com
+Version: 1.0.0.3
+Author: Mint Plugins
+Author URI: http://mintplugins.com
 Text Domain: mp_stacks_postgrid
 Domain Path: languages
 License: GPL2
 */
 
-/*  Copyright 2012  Phil Johnston  (email : phil@moveplugins.com)
+/*  Copyright 2014  Phil Johnston  (email : phil@mintplugins.com)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License, version 2, as 
-    published by the Free Software Move Plugins Core.
+    published by the Free Software Mint Plugins Core.
 
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -34,7 +34,7 @@ License: GPL2
 */
 // Plugin version
 if( !defined( 'MP_STACKS_POSTGRID_VERSION' ) )
-	define( 'MP_STACKS_POSTGRID_VERSION', '1.0.0.2' );
+	define( 'MP_STACKS_POSTGRID_VERSION', '1.0.0.3' );
 
 // Plugin Folder URL
 if( !defined( 'MP_STACKS_POSTGRID_PLUGIN_URL' ) )
@@ -147,6 +147,13 @@ function mp_stacks_postgrid_include_files(){
 		 * Metabox for postgrid
 		 */
 		require( MP_STACKS_POSTGRID_PLUGIN_DIR . 'includes/metaboxes/mp-stacks-postgrid-meta/mp-stacks-postgrid-meta.php' );
+		
+		/**
+		 * Functions which assist with the creation of templates using this add-on
+		 */
+		if ( function_exists('mp_stacks_developer_textdomain') ){
+			require( MP_STACKS_POSTGRID_PLUGIN_DIR . 'includes/misc-functions/stack-template-functions.php' );
+		}
 		
 		/**
 		 * Metabox which adds postgrid as a content type

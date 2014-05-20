@@ -1,6 +1,6 @@
 === MP Stacks + PostGrid ===
 Contributors: johnstonphilip
-Donate link: http://moveplugins.com/
+Donate link: http://mintplugins.com/
 Tags: message bar, header
 Requires at least: 3.5
 Tested up to: 3.8.1
@@ -26,12 +26,17 @@ This section describes how to install the plugin and get it working.
 
 == Frequently Asked Questions ==
 
-See full instructions at http://moveplugins.com/doc/mp-stacks
+See full instructions at http://mintplugins.com/doc/mp-stacks
 
 == Screenshots ==
 
 
 == Changelog ==
+
+= 1.0.0.3 = May 20, 2014
+* Additional options for colours, text sizing, and post spacing
+* Ajax “Load More” button added
+* Move To Mint 
 
 = 1.0.0.2 = February 20, 2014
 * Change postgrid to free plugin 
