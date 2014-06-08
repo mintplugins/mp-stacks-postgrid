@@ -3,7 +3,7 @@
 Plugin Name: MP Stacks + PostGrid
 Plugin URI: http://mintplugins.com
 Description: Displays posts from WordPress in a grid in a Brick
-Version: 1.0.0.3
+Version: 1.0.0.4
 Author: Mint Plugins
 Author URI: http://mintplugins.com
 Text Domain: mp_stacks_postgrid

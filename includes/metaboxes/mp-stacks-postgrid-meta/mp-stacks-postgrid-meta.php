@@ -21,7 +21,16 @@
  * @param    array $args See link for description.
  * @return   void
  */
-function mp_stacks_postgrid_create_meta_box(){	
+function mp_stacks_postgrid_create_meta_box(){
+	
+	//Get current page
+	$current_page = get_current_screen();
+	
+	//Only load if we are on an mp_brick page
+	if ( $current_page->id != 'mp_brick' ){
+		return;	
+	}
+		
 	/**
 	 * Array which stores all info about the new metabox
 	 *
@@ -189,4 +198,4 @@ function mp_stacks_postgrid_create_meta_box(){
 	global $mp_stacks_postgrid_meta_box;
 	$mp_stacks_postgrid_meta_box = new MP_CORE_Metabox($mp_stacks_postgrid_add_meta_box, $mp_stacks_postgrid_items_array);
 }
-add_action('widgets_init', 'mp_stacks_postgrid_create_meta_box');
+add_action('current_screen', 'mp_stacks_postgrid_create_meta_box');

@@ -2,6 +2,9 @@
 	display:block;
 	margin: 0 -20px 0 -20px;	
 }
+.mp-brick[max-width~='600px'] .mp-stacks-postgrid{ 
+	margin: 0px;	
+}
 .mp-stacks-postgrid-item{
 	display:inline-block;
 	text-align:left;

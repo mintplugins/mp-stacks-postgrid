@@ -32,7 +32,7 @@ if (!function_exists('mp_stacks_plugin_check')){
 				'plugin_info_link' => 'http://mintplugins.com/plugins/mp-stacks',
 				'plugin_group_install' => true,
 				'plugin_required' => true,
-				'plugin_wp_stacks' => true,
+				'plugin_wp_repo' => true,
 			)
 		);
 		
