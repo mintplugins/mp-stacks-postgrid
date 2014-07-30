@@ -4,7 +4,7 @@ Donate link: http://mintplugins.com/
 Tags: message bar, header
 Requires at least: 3.5
 Tested up to: 3.8.1
-Stable tag: 1.0.0.4
+Stable tag: 1.0.0.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -32,6 +32,11 @@ See full instructions at http://mintplugins.com/doc/mp-stacks
 
 
 == Changelog ==
+
+= 1.0.0.5 = July 30, 2014
+* Options added for animation, placement of text, text backgrounds
+* Changed post grid choices to only include post categories for the sake of simplicity
+* Ajax Load More button now changes to “Loading..” when clicked
 
 = 1.0.0.4 = June 8, 2014
 * Mobile Sizing

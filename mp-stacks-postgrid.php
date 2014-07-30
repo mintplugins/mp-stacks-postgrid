@@ -2,8 +2,8 @@
 /*
 Plugin Name: MP Stacks + PostGrid
 Plugin URI: http://mintplugins.com
-Description: Displays posts from WordPress in a grid in a Brick
-Version: 1.0.0.4
+Description: Displays posts from WordPress categories in a grid in a Brick
+Version: 1.0.0.0
 Author: Mint Plugins
 Author URI: http://mintplugins.com
 Text Domain: mp_stacks_postgrid
@@ -34,7 +34,7 @@ License: GPL2
 */
 // Plugin version
 if( !defined( 'MP_STACKS_POSTGRID_VERSION' ) )
-	define( 'MP_STACKS_POSTGRID_VERSION', '1.0.0.3' );
+	define( 'MP_STACKS_POSTGRID_VERSION', '1.0.0.0' );
 
 // Plugin Folder URL
 if( !defined( 'MP_STACKS_POSTGRID_PLUGIN_URL' ) )
@@ -139,9 +139,14 @@ function mp_stacks_postgrid_include_files(){
 		require( MP_STACKS_POSTGRID_PLUGIN_DIR . 'includes/misc-functions/enqueue-scripts.php' );
 		
 		/**
-		 * Media Filters for postgrid
+		 * HTML Content Filters for postgrid
 		 */
-		require( MP_STACKS_POSTGRID_PLUGIN_DIR . 'includes/misc-functions/content-filters.php' );
+		require( MP_STACKS_POSTGRID_PLUGIN_DIR . 'includes/misc-functions/content-filters-html.php' );
+		
+		/**
+		 * CSS Content Filters for postgrid
+		 */
+		require( MP_STACKS_POSTGRID_PLUGIN_DIR . 'includes/misc-functions/content-filters-css.php' );
 		
 		/**
 		 * Metabox for postgrid

@@ -22,7 +22,7 @@
  if (!function_exists('mp_stacks_postgrid_update')){
 	function mp_stacks_postgrid_update() {
 		$args = array(
-			'software_name' => 'MP Stacks PostGrid', //<- The exact name of this Plugin.
+			'software_name' => 'MP Stacks + PostGrid', //<- The exact name of this Plugin.
 			'software_api_url' => 'http://mintplugins.com',//The URL where PostGrid and mp_repo are installed and checked
 			'software_filename' => 'mp-stacks-postgrid.php',
 			'software_licensed' => false, //<-Boolean
