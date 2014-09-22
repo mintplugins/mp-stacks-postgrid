@@ -22,17 +22,6 @@
  * @return   void
  */
 function mp_stacks_postgrid_create_meta_box(){
-	
-	//Get current page
-	$current_page = get_current_screen();
-	
-	//Only load if we are on an mp_brick page
-	if ( $current_page->id == 'mp_brick' || $current_page->id == 'settings_page_mp_stacks_create_template_page' ){
-		
-	}
-	else{
-		return;	
-	}
 		
 	/**
 	 * Array which stores all info about the new metabox
@@ -54,10 +43,10 @@ function mp_stacks_postgrid_create_meta_box(){
 		array(
 			'field_id'			=> 'postgrid_taxonomy_term',
 			'field_title' 	=> __( 'Select the Category or Tag you want to show', 'mp_stacks_postgrid'),
-			'field_description' 	=> '<br />' . __( 'Open up the following areas to add/remove new postgrid.', 'mp_stacks_postgrid' ),
+			'field_description' 	=> '<br />' . __( 'What posts should be shown in the postgrid?', 'mp_stacks_postgrid' ),
 			'field_type' 	=> 'select',
 			'field_value' => '',
-			'field_select_values' => mp_core_get_all_terms_by_tax('category')
+			'field_select_values' => mp_core_get_all_tax_terms()
 		),
 		array(
 			'field_id'			=> 'postgrid_layout_settings',
@@ -372,7 +361,7 @@ function mp_stacks_postgrid_create_meta_box(){
 			'field_title' 	=> __( 'Show Title Backgrounds?', 'mp_stacks_postgrid'),
 			'field_description' 	=> __( 'Do you want to show a background color behind the title?', 'mp_stacks_postgrid' ),
 			'field_type' 	=> 'checkbox',
-			'field_value' => 'true',
+			'field_value' => '',
 			'field_showhider' => 'postgrid_title_background_settings',
 		),
 		array(
@@ -418,7 +407,7 @@ function mp_stacks_postgrid_create_meta_box(){
 		),
 		array(
 			'field_id'			=> 'postgrid_excerpt_placement',
-			'field_title' 	=> __( 'Titles\' Placement', 'mp_stacks_postgrid'),
+			'field_title' 	=> __( 'Excerpts\' Placement', 'mp_stacks_postgrid'),
 			'field_description' 	=> __( 'Where would you like to place the excerpt? Default: Below Image, Left', 'mp_stacks_postgrid' ),
 			'field_type' 	=> 'select',
 			'field_value' => '',
@@ -533,7 +522,7 @@ function mp_stacks_postgrid_create_meta_box(){
 			'field_title' 	=> __( 'Show Excerpt Backgrounds?', 'mp_stacks_postgrid'),
 			'field_description' 	=> __( 'Do you want to show a background color behind the excerpt?', 'mp_stacks_postgrid' ),
 			'field_type' 	=> 'checkbox',
-			'field_value' => 'true',
+			'field_value' => '',
 			'field_showhider' => 'postgrid_excerpt_background_settings',
 		),
 		array(
@@ -640,4 +629,4 @@ function mp_stacks_postgrid_create_meta_box(){
 	global $mp_stacks_postgrid_meta_box;
 	$mp_stacks_postgrid_meta_box = new MP_CORE_Metabox($mp_stacks_postgrid_add_meta_box, $mp_stacks_postgrid_items_array);
 }
-add_action('current_screen', 'mp_stacks_postgrid_create_meta_box');
+add_action('mp_brick_metabox', 'mp_stacks_postgrid_create_meta_box');
