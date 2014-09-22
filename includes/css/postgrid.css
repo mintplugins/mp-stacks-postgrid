@@ -1,6 +1,5 @@
 .mp-stacks-postgrid{
 	display:block;
-	margin: 0 -10px 0 -10px;	
 }
 .mp-brick[max-width~='600px'] .mp-stacks-postgrid{ 
 	margin: 0px;	
