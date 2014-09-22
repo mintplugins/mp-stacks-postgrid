@@ -34,7 +34,7 @@ function mp_stacks_postgrid_enqueue_scripts(){
 	wp_enqueue_script( 'velocity_js', plugins_url( 'js/jquery.velocity.min.js', dirname( __FILE__ ) ), array( 'jquery' ) );
 	
 	//Enqueue postgrid JS
-	wp_enqueue_script( 'mp_stacks_postgrid_js', plugins_url( 'js/postgrid.js', dirname( __FILE__ ) ), array( 'jquery', 'velocity_js', 'velocity_ui_js' ) );
+	wp_enqueue_script( 'mp_stacks_postgrid_js', plugins_url( 'js/postgrid.js', dirname( __FILE__ ) ), array( 'jquery', 'velocity_js' ) );
 	
 	//Localize the postgrid js
 	wp_localize_script( 'mp_stacks_postgrid_js', 'mp_stacks_postgrid_vars', array(
