@@ -33,6 +33,10 @@ function mp_stacks_brick_content_output_postgrid( $default_content_output, $mp_s
 	
 	//Get Download Taxonomy Term to Loop through
 	$postgrid_taxonomy_term = mp_core_get_post_meta($post_id, 'postgrid_taxonomy_term', '');
+	
+	//Get PostGrid Metabox Repeater Array
+	$postgrid_taxonomy_term = mp_core_get_post_meta($post_id, 'postgrid_taxonomy_term', '');
+	$termid_taxname = explode( '*', $postgrid_taxonomy_term );
 		
 	//Download per row
 	$postgrid_per_row = mp_core_get_post_meta($post_id, 'postgrid_per_row', '3');
@@ -77,21 +81,21 @@ function mp_stacks_brick_content_output_postgrid( $default_content_output, $mp_s
 	$postgrid_output = '<div class="mp-stacks-postgrid">';
 	
 	//Get JS output to animate the titles on mouse over and out
-	$postgrid_output .= mp_core_js_mouse_over_animate_child( '.mp-stacks-postgrid-item', '.mp-stacks-postgrid-item-title-holder', get_post_meta( $post_id, 'postgrid_title_animation_keyframes', true ) ); 
+	$postgrid_output .= mp_core_js_mouse_over_animate_child( '#mp-brick-' . $post_id . ' .mp-stacks-postgrid-item', '.mp-stacks-postgrid-item-title-holder', mp_core_get_post_meta( $post_id, 'postgrid_title_animation_keyframes', array() ) ); 
 	
 	//Get JS output to animate the titles background on mouse over and out
 	if ( $postgrid_show_title_backgrounds ){
-		$postgrid_output .= mp_core_js_mouse_over_animate_child( '.mp-stacks-postgrid-item', '.mp-stacks-postgrid-item-title-background', get_post_meta( $post_id, 'postgrid_title_background_animation_keyframes', true ) ); 
+		$postgrid_output .= mp_core_js_mouse_over_animate_child( '#mp-brick-' . $post_id . ' .mp-stacks-postgrid-item', '.mp-stacks-postgrid-item-title-background', mp_core_get_post_meta( $post_id, 'postgrid_title_background_animation_keyframes', array() ) ); 
 	}
 	
 	//Get JS output to animate the excerpts on mouse over and out
-	$postgrid_output .= mp_core_js_mouse_over_animate_child( '.mp-stacks-postgrid-item', '.mp-stacks-postgrid-item-excerpt-holder', get_post_meta( $post_id, 'postgrid_excerpt_animation_keyframes', true ) ); 
+	$postgrid_output .= mp_core_js_mouse_over_animate_child( '#mp-brick-' . $post_id . ' .mp-stacks-postgrid-item', '.mp-stacks-postgrid-item-excerpt-holder', mp_core_get_post_meta( $post_id, 'postgrid_excerpt_animation_keyframes', array() ) ); 
 	
 	//Get JS output to animate the images on mouse over and out
-	$postgrid_output .= mp_core_js_mouse_over_animate_child( '.mp-stacks-postgrid-item', '.mp-stacks-postgrid-item-image', get_post_meta( $post_id, 'postgrid_image_animation_keyframes', true ) ); 
+	$postgrid_output .= mp_core_js_mouse_over_animate_child( '#mp-brick-' . $post_id . ' .mp-stacks-postgrid-item', '.mp-stacks-postgrid-item-image', mp_core_get_post_meta( $post_id, 'postgrid_image_animation_keyframes', array() ) ); 
 	
 	//Get JS output to animate the images overlays on mouse over and out
-	$postgrid_output .= mp_core_js_mouse_over_animate_child( '.mp-stacks-postgrid-item', '.mp-stacks-postgrid-item-image-overlay', get_post_meta( $post_id, 'postgrid_image_overlay_animation_keyframes', true ) ); 
+	$postgrid_output .= mp_core_js_mouse_over_animate_child( '#mp-brick-' . $post_id . ' .mp-stacks-postgrid-item', '.mp-stacks-postgrid-item-image-overlay', mp_core_get_post_meta( $post_id, 'postgrid_image_overlay_animation_keyframes', array() ) ); 
 	
 	//Set counter to 0
 	$counter = 1;
@@ -103,9 +107,9 @@ function mp_stacks_brick_content_output_postgrid( $default_content_output, $mp_s
 		'tax_query' => array(
 			'relation' => 'AND',
 			array(
-				'taxonomy' => 'category',
+				'taxonomy' => $termid_taxname[1],
 				'field'    => 'id',
-				'terms'    => $postgrid_taxonomy_term,
+				'terms'    => $termid_taxname[0],
 				'operator' => 'IN'
 			)
 		)
@@ -303,6 +307,10 @@ function mp_postgrid_ajax_load_more(){
 
 	//Get Download Taxonomy Term to Loop through
 	$postgrid_taxonomy_term = mp_core_get_post_meta($post_id, 'postgrid_taxonomy_term', '');
+	
+	//Get PostGrid Metabox Repeater Array
+	$postgrid_taxonomy_term = mp_core_get_post_meta($post_id, 'postgrid_taxonomy_term', '');
+	$termid_taxname = explode( '*', $postgrid_taxonomy_term );
 		
 	//Download per row
 	$postgrid_per_row = mp_core_get_post_meta($post_id, 'postgrid_per_row', '3');
@@ -351,9 +359,9 @@ function mp_postgrid_ajax_load_more(){
 		'tax_query' => array(
 			'relation' => 'AND',
 			array(
-				'taxonomy' => 'category',
+				'taxonomy' => $termid_taxname[1],
 				'field'    => 'id',
-				'terms'    => $postgrid_taxonomy_term,
+				'terms'    => $termid_taxname[0],
 				'operator' => 'IN'
 			)
 		)
@@ -479,13 +487,17 @@ function mp_postgrid_ajax_load_more(){
 					//If we should show the title below the image
 					if ( strpos( $postgrid_titles_placement, 'below') !== false && $postgrid_show_titles){
 						
-						$postgrid_output .= mp_stacks_postgrid_title( $grid_post_id );
+						$postgrid_output .= '<a href="' . get_permalink() . '" class="mp-stacks-postgrid-title-link">';	
+							$postgrid_output .= mp_stacks_postgrid_title( $grid_post_id );
+						$postgrid_output .= '</a>';	
 			
 					}
 					//If we should show the excerpt below the image
 					if ( strpos( $postgrid_excerpt_placement, 'below') !== false && $postgrid_show_excerpts){
 						
-						$postgrid_output .= mp_stacks_postgrid_excerpt( $grid_post_id, $word_limit, $read_more_text );
+						$postgrid_output .= '<a href="' . get_permalink() . '" class="mp-stacks-postgrid-title-link">';	
+							$postgrid_output .= mp_stacks_postgrid_excerpt( $grid_post_id, $word_limit, $read_more_text );
+						$postgrid_output .= '</a>';	
 					}
 			
 				$postgrid_output .= '</div>';
