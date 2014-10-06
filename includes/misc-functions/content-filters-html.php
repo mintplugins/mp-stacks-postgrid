@@ -75,7 +75,8 @@ function mp_stacks_brick_content_output_postgrid( $default_content_output, $mp_s
 	//get word limit for exceprts
 	$word_limit = mp_core_get_post_meta($post_id, 'postgrid_excerpt_word_limit', 20);
 	
-	$read_more_text = __('...', 'mp_stacks_postgrid');
+	//Get Read More Text for excerpts
+	$read_more_text = mp_core_get_post_meta($post_id, 'postgrid_excerpt_read_more_text', __( '...Read More', 'mp_stacks_postgrid' ) );
 	
 	//Get Download Output
 	$postgrid_output = '<div class="mp-stacks-postgrid">';
@@ -349,7 +350,8 @@ function mp_postgrid_ajax_load_more(){
 	//get word limit for exceprts
 	$word_limit = mp_core_get_post_meta($post_id, 'postgrid_excerpt_word_limit', 20);
 	
-	$read_more_text = __('...', 'mp_stacks_postgrid');
+	//Get Read More Text for excerpts
+	$read_more_text = mp_core_get_post_meta($post_id, 'postgrid_excerpt_read_more_text', __( '...Read More', 'mp_stacks_postgrid' ) );
 	
 	//Set the args for the new query
 	$postgrid_args = array(
@@ -374,7 +376,7 @@ function mp_postgrid_ajax_load_more(){
 	
 	$css_output = NULL;
 	
-	//jQuery Trigger to reset all downloadgrid animations to their first frames
+	//jQuery Trigger to reset all postgrid animations to their first frames
 	$postgrid_output = '<script type="text/javascript">jQuery(document).ready(function($){ $(document).trigger("mp_core_animation_set_first_keyframe_trigger"); });</script>';
 	
 	//Loop through the stack group		
@@ -567,7 +569,7 @@ function mp_stacks_postgrid_title( $post_id ){
  * @param    $read_more_text String - The ID of the post to get the title of
  * @return   $html_output String - A string holding the html for an excerpt in the grid
  */
-function mp_stacks_postgrid_excerpt( $post_id, $word_limit, $read_more_text ){
+function mp_stacks_postgrid_excerpt( $post_id, $word_limit, $read_more_text = NULL ){
 	
 	//Add clear div to bump postgrid below title and icon
 	$postgrid_output = '<div class="mp-stacks-postgrid-item-clearedfix"></div>';
@@ -588,7 +590,7 @@ function mp_stacks_postgrid_excerpt( $post_id, $word_limit, $read_more_text ){
 		
 		$output_string = strip_tags($the_excerpt);
 	
-		//$output_string .= $read_more_text;
+		$output_string .= !empty( $read_more_text ) ? '<span class="mp-stacks-postgrid-read-more">' . $read_more_text . '</span>' : NULL;
 		
 	}
 	
