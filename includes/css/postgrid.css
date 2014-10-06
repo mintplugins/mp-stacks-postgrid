@@ -119,6 +119,7 @@
 	box-sizing: border-box;
 }
 
+.mp-stacks-postgrid-item-title-highlight,
 .mp-stacks-postgrid-item-excerpt-highlight{
 	display: inline;
     padding-left: 0!important;
@@ -151,4 +152,7 @@
 }
 .mp-stacks-postgrid-load-more-button{
 	margin:20px;	
+}
+.mp-stacks-postgrid-read-more{
+	white-space: nowrap;	
 }
