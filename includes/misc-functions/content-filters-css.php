@@ -48,7 +48,7 @@ function mp_stacks_brick_content_output_css_postgrid( $css_output, $post_id, $fi
 	//Title Color and size
 	$postgrid_title_color = mp_core_get_post_meta($post_id, 'postgrid_title_color', NULL);
 	$postgrid_title_size = mp_core_get_post_meta($post_id, 'postgrid_title_size', '20');
-	$postgrid_title_leading = mp_core_get_post_meta($post_id, 'postgrid_title_leading', '5');
+	$postgrid_title_lineheight = mp_core_get_post_meta($post_id, 'postgrid_title_lineheight', '20');
 	
 	//Show Post Title Backgrounds?
 	$postgrid_show_title_backgrounds = mp_core_get_post_meta($post_id, 'postgrid_show_title_backgrounds');
@@ -56,7 +56,13 @@ function mp_stacks_brick_content_output_css_postgrid( $css_output, $post_id, $fi
 	//If we should show the title backgrounds
 	if ( $postgrid_show_title_backgrounds ){
 		//Title background spacing (padding)
-		$postgrid_title_background_padding = mp_core_get_post_meta($post_id, 'postgrid_title_background_padding', '0');	
+		$postgrid_title_background_padding = mp_core_get_post_meta($post_id, 'postgrid_title_background_padding', '5');	
+		
+			//Calculate Minimum Line Height with Padding
+			$min_line_height_with_padding = ( $postgrid_title_background_padding * 3 ) + $postgrid_title_size;
+			//If the line height with padding is greater than the lineheight, we need to make the lineheight match or the layout gets thrown off
+			$postgrid_title_lineheight = $min_line_height_with_padding  > $postgrid_title_lineheight ? $min_line_height_with_padding : $postgrid_title_lineheight;
+			
 		//Title background color 
 		$postgrid_title_background_color = mp_core_get_post_meta($post_id, 'postgrid_title_background_color', '#fff' );	
 		//Title background opacity 
@@ -77,7 +83,7 @@ function mp_stacks_brick_content_output_css_postgrid( $css_output, $post_id, $fi
 	//Excerpt Color and Size
 	$postgrid_excerpt_color = mp_core_get_post_meta($post_id, 'postgrid_excerpt_color', NULL);
 	$postgrid_excerpt_size = mp_core_get_post_meta($post_id, 'postgrid_excerpt_size', '15');
-	$postgrid_excerpt_leading = mp_core_get_post_meta($post_id, 'postgrid_excerpt_leading', '3');
+	$postgrid_excerpt_lineheight = mp_core_get_post_meta($post_id, 'postgrid_excerpt_lineheight', '18');
 	
 	//Show Excerpt Backgrounds?
 	$postgrid_show_excerpt_backgrounds = mp_core_get_post_meta($post_id, 'postgrid_show_excerpt_backgrounds');
@@ -85,7 +91,13 @@ function mp_stacks_brick_content_output_css_postgrid( $css_output, $post_id, $fi
 	//If we should show the excerpt backgrounds
 	if ( $postgrid_show_excerpt_backgrounds ){
 		//Excerpt background spacing (padding)
-		$postgrid_excerpt_background_padding = mp_core_get_post_meta($post_id, 'postgrid_excerpt_background_padding', '0');	
+		$postgrid_excerpt_background_padding = mp_core_get_post_meta($post_id, 'postgrid_excerpt_background_padding', '5');	
+		
+			//Calculate Minimum Line Height with Padding
+			$min_line_height_with_padding = ( $postgrid_excerpt_background_padding * 3 ) + $postgrid_excerpt_size;
+			//If the line height with padding is greater than the lineheight, we need to make the lineheight match or the layout gets thrown off
+			$postgrid_excerpt_lineheight = $min_line_height_with_padding  > $postgrid_excerpt_lineheight ? $min_line_height_with_padding : $postgrid_excerpt_lineheight;
+			
 		//Excerpt background color 
 		$postgrid_excerpt_background_color = mp_core_get_post_meta($post_id, 'postgrid_excerpt_background_color', '#fff' );	
 		//Excerpt background opacity 
@@ -122,7 +134,7 @@ function mp_stacks_brick_content_output_css_postgrid( $css_output, $post_id, $fi
 				) ) . ';' . 
 			mp_core_css_line( 'color', $postgrid_title_color ) . 
 			mp_core_css_line( 'font-size', $postgrid_title_size, 'px' ) . 
-			mp_core_css_line( 'line-height', ( $postgrid_title_size + $postgrid_title_leading ), 'px' ) . 
+			mp_core_css_line( 'line-height', $postgrid_title_lineheight, 'px' ) . 
 		'}' . 
 		mp_stacks_grid_highlight_text_css( array( 
 				'brick_id' => $post_id,
@@ -138,7 +150,7 @@ function mp_stacks_brick_content_output_css_postgrid( $css_output, $post_id, $fi
 				) ) . '; ' .
 			mp_core_css_line( 'color', $postgrid_excerpt_color ) . 
 			mp_core_css_line( 'font-size', $postgrid_excerpt_size, 'px' ) . 
-			mp_core_css_line( 'line-height', ( $postgrid_excerpt_size + $postgrid_excerpt_leading ), 'px' ) . 
+			mp_core_css_line( 'line-height', $postgrid_excerpt_lineheight, 'px' ) . 
 		'}' . 
 		mp_stacks_grid_highlight_text_css( array( 
 				'brick_id' => $post_id,
@@ -159,7 +171,7 @@ function mp_stacks_brick_content_output_css_postgrid( $css_output, $post_id, $fi
 		#mp-brick-' . $post_id . ' .mp-stacks-postgrid-over-image-text-container-top,
 		#mp-brick-' . $post_id . ' .mp-stacks-postgrid-over-image-text-container-middle,
 		#mp-brick-' . $post_id . ' .mp-stacks-postgrid-over-image-text-container-bottom{' . 
-			mp_core_css_line( 'padding', $postgrid_featured_images_inner_margin ) . 
+			mp_core_css_line( 'padding', $postgrid_featured_images_inner_margin, 'px' ) . 
 		'}';
 		
 		return $css_output;
