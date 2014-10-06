@@ -397,6 +397,16 @@ function mp_postgrid_ajax_load_more(){
 				$grid_post_id = get_the_ID();
 		
 				$postgrid_output .= '<div class="mp-stacks-postgrid-item">';
+				
+					//Microformats
+					$postgrid_output .= '
+					<article class="microformats hentry" style="display:none;">
+						<h2 class="entry-title">' . get_the_title() . '</h2>
+						<span class="author vcard"><span class="fn">' . get_the_author() . '</span></span>
+						<time class="published" datetime="' . get_the_time('Y-m-d H:i:s') . '">' . get_the_date() . '</time>
+						<time class="updated" datetime="' . get_the_modified_date('Y-m-d H:i:s') . '">' . get_the_modified_date() .'</time>
+						<div class="entry-summary">' . mp_core_get_excerpt_by_id( $grid_post_id ) . '</div>
+					</article>';
 					
 					//If we should show the featured images
 					if ($postgrid_show_featured_images){
