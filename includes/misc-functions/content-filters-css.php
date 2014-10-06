@@ -36,7 +36,7 @@ function mp_stacks_brick_content_output_css_postgrid( $css_output, $post_id, $fi
 	$postgrid_post_spacing = mp_core_get_post_meta($post_id, 'postgrid_post_spacing', '20');
 	
 	//Padding inside the featured images
-	$postgrid_featured_images_inner_margin = mp_core_get_post_meta($post_id, 'postgrid_featured_images_inner_margin', '20' );
+	$postgrid_featured_images_inner_margin = mp_core_get_post_meta($post_id, 'postgrid_featured_images_inner_margin', '10' );
 	
 	//Image Overlay Color and Opacity
 	$postgrid_images_overlay_color = mp_core_get_post_meta($post_id, 'postgrid_images_overlay_color', '#FFF' );
