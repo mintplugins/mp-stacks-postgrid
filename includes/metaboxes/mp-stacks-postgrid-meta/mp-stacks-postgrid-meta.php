@@ -60,7 +60,7 @@ function mp_stacks_postgrid_create_meta_box(){
 			'field_title' 	=> __( 'Downloads Per Row', 'mp_stacks_postgrid'),
 			'field_description' 	=> __( 'How many posts do you want from left to right before a new row starts? Default 3', 'mp_stacks_postgrid' ),
 			'field_type' 	=> 'number',
-			'field_value' => '',
+			'field_value' => '3',
 			'field_showhider' => 'postgrid_layout_settings',
 		),
 		array(
@@ -68,7 +68,7 @@ function mp_stacks_postgrid_create_meta_box(){
 			'field_title' 	=> __( 'Total Downloads', 'mp_stacks_postgrid'),
 			'field_description' 	=> __( 'How many posts do you want to show entirely? Default: 9', 'mp_stacks_postgrid' ),
 			'field_type' 	=> 'number',
-			'field_value' => '',
+			'field_value' => '9',
 			'field_showhider' => 'postgrid_layout_settings',
 		),
 		array(
@@ -76,7 +76,7 @@ function mp_stacks_postgrid_create_meta_box(){
 			'field_title' 	=> __( 'Download Spacing', 'mp_stacks_postgrid'),
 			'field_description' 	=> __( 'How much space would you like to have in between each post in pixels? Default 20', 'mp_stacks_postgrid' ),
 			'field_type' 	=> 'number',
-			'field_value' => '',
+			'field_value' => '20',
 			'field_showhider' => 'postgrid_layout_settings',
 		),
 		array(
@@ -99,7 +99,7 @@ function mp_stacks_postgrid_create_meta_box(){
 			'field_title' 	=> __( 'Featured Image Width', 'mp_stacks_postgrid'),
 			'field_description' 	=> __( 'How wide should the images be in pixels? Default 300', 'mp_stacks_postgrid' ),
 			'field_type' 	=> 'number',
-			'field_value' => '',
+			'field_value' => '300',
 			'field_showhider' => 'postgrid_featured_images_settings',
 		),
 		array(
@@ -107,7 +107,7 @@ function mp_stacks_postgrid_create_meta_box(){
 			'field_title' 	=> __( 'Featured Image Height', 'mp_stacks_postgrid'),
 			'field_description' 	=> __( 'How high should the images be in pixels? Default 200', 'mp_stacks_postgrid' ),
 			'field_type' 	=> 'number',
-			'field_value' => '',
+			'field_value' => '200',
 			'field_showhider' => 'postgrid_featured_images_settings',
 		),
 		array(
@@ -115,7 +115,7 @@ function mp_stacks_postgrid_create_meta_box(){
 			'field_title' 	=> __( 'Featured Image Inner Margin', 'mp_stacks_postgrid'),
 			'field_description' 	=> __( 'How many pixels should the inner margin be for things placed over the featured image? Default 20', 'mp_stacks_postgrid' ),
 			'field_type' 	=> 'number',
-			'field_value' => '',
+			'field_value' => '20',
 			'field_showhider' => 'postgrid_featured_images_settings',
 		),
 		//Image animation stuff
@@ -258,7 +258,7 @@ function mp_stacks_postgrid_create_meta_box(){
 			'field_title' 	=> __( 'Titles\' Placement', 'mp_stacks_postgrid'),
 			'field_description' 	=> __( 'Where would you like to place the title? Default: Below Image, Left', 'mp_stacks_postgrid' ),
 			'field_type' 	=> 'select',
-			'field_value' => '',
+			'field_value' => 'below_image_left',
 			'field_select_values' => mp_stacks_postgrid_get_text_position_options(),
 			'field_showhider' => 'postgrid_title_settings',
 		),
@@ -275,15 +275,15 @@ function mp_stacks_postgrid_create_meta_box(){
 			'field_title' 	=> __( 'Titles\' Size', 'mp_stacks_postgrid'),
 			'field_description' 	=> __( 'Enter the text size the titles will be. Default: 20', 'mp_stacks_postgrid' ),
 			'field_type' 	=> 'number',
-			'field_value' => '',
+			'field_value' => '20',
 			'field_showhider' => 'postgrid_title_settings',
 		),
 		array(
-			'field_id'			=> 'postgrid_title_leading',
-			'field_title' 	=> __( 'Titles\' Leading', 'mp_stacks_postgrid'),
-			'field_description' 	=> __( 'Enter the <a href="https://mintplugins.com/wp-content/uploads/2014/07/text-metrics.png" target="_blank">leading</a> height for the excerpt text. Default: 5', 'mp_stacks_postgrid' ),
+			'field_id'			=> 'postgrid_title_lineheight',
+			'field_title' 	=> __( 'Titles\' Line Height', 'mp_stacks_postgrid'),
+			'field_description' 	=> __( 'Enter the line height for the excerpt text. Default: 20', 'mp_stacks_postgrid' ),
 			'field_type' 	=> 'number',
-			'field_value' => '',
+			'field_value' => '20',
 			'field_showhider' => 'postgrid_title_settings',
 		),
 		array(
@@ -367,9 +367,9 @@ function mp_stacks_postgrid_create_meta_box(){
 		array(
 			'field_id'			=> 'postgrid_title_background_padding',
 			'field_title' 	=> __( 'Title Background Size', 'mp_stacks_postgrid'),
-			'field_description' 	=> __( 'How many pixels bigger should the Title Background be than the Text? Default: 0', 'mp_stacks_postgrid' ),
+			'field_description' 	=> __( 'How many pixels bigger should the Title Background be than the Title Text? Default: 5', 'mp_stacks_postgrid' ),
 			'field_type' 	=> 'number',
-			'field_value' => '',
+			'field_value' => '5',
 			'field_showhider' => 'postgrid_title_background_settings',
 		),
 		array(
@@ -377,7 +377,7 @@ function mp_stacks_postgrid_create_meta_box(){
 			'field_title' 	=> __( 'Title Background Color', 'mp_stacks_postgrid'),
 			'field_description' 	=> __( 'What color should the title background be? Default: #FFF (White)', 'mp_stacks_postgrid' ),
 			'field_type' 	=> 'colorpicker',
-			'field_value' => '',
+			'field_value' => '#FFF',
 			'field_showhider' => 'postgrid_title_background_settings',
 		),
 		array(
@@ -385,7 +385,7 @@ function mp_stacks_postgrid_create_meta_box(){
 			'field_title' 	=> __( 'Title Background Opacity', 'mp_stacks_postgrid'),
 			'field_description' 	=> __( 'Set the opacity percentage? Default: 100', 'mp_stacks_postgrid' ),
 			'field_type' 	=> 'number',
-			'field_value' => '',
+			'field_value' => '100',
 			'field_showhider' => 'postgrid_title_background_settings',
 		),
 		
@@ -410,7 +410,7 @@ function mp_stacks_postgrid_create_meta_box(){
 			'field_title' 	=> __( 'Excerpts\' Placement', 'mp_stacks_postgrid'),
 			'field_description' 	=> __( 'Where would you like to place the excerpt? Default: Below Image, Left', 'mp_stacks_postgrid' ),
 			'field_type' 	=> 'select',
-			'field_value' => '',
+			'field_value' => 'below_image_left',
 			'field_select_values' => mp_stacks_postgrid_get_text_position_options(),
 			'field_showhider' => 'postgrid_excerpt_settings',
 		),
@@ -427,15 +427,15 @@ function mp_stacks_postgrid_create_meta_box(){
 			'field_title' 	=> __( 'Excerpt\'s Size', 'mp_stacks_postgrid'),
 			'field_description' 	=> __( 'Enter the text size the excerpts will be. Default: 15', 'mp_stacks_postgrid' ),
 			'field_type' 	=> 'number',
-			'field_value' => '',
+			'field_value' => '15',
 			'field_showhider' => 'postgrid_excerpt_settings',
 		),
 		array(
-			'field_id'			=> 'postgrid_excerpt_leading',
-			'field_title' 	=> __( 'Excerpt\'s Leading', 'mp_stacks_postgrid'),
-			'field_description' 	=> __( 'Enter the <a href="https://mintplugins.com/wp-content/uploads/2014/07/text-metrics.png" target="_blank">leading</a> height for the excerpt text. Default: 3', 'mp_stacks_postgrid' ),
+			'field_id'			=> 'postgrid_excerpt_lineheight',
+			'field_title' 	=> __( 'Excerpt\'s Line Height', 'mp_stacks_postgrid'),
+			'field_description' 	=> __( 'Enter the line height for the excerpt text. Default: 18', 'mp_stacks_postgrid' ),
 			'field_type' 	=> 'number',
-			'field_value' => '',
+			'field_value' => '18',
 			'field_showhider' => 'postgrid_excerpt_settings',
 		),
 		array(
@@ -446,6 +446,16 @@ function mp_stacks_postgrid_create_meta_box(){
 			'field_value' => '',
 			'field_showhider' => 'postgrid_excerpt_settings',
 		),
+		array(
+			'field_id'			=> 'postgrid_excerpt_read_more_text',
+			'field_title' 	=> __( '"Read More" Text for Excerpt\'s', 'mp_stacks_postgrid'),
+			'field_description' 	=> __( 'What should the "Read More" text be at the end of the Excerpt? Default: "Read More". Leave blank for no output.', 'mp_stacks_postgrid' ),
+			'field_type' 	=> 'textbox',
+			'field_value' => __( 'Read More', 'mp_stacks_postgrid' ),
+			'field_showhider' => 'postgrid_excerpt_settings',
+		),
+		
+		
 		//Excerpt animation stuff
 		array(
 			'field_id'			=> 'postgrid_excerpt_animation_description',
@@ -528,9 +538,9 @@ function mp_stacks_postgrid_create_meta_box(){
 		array(
 			'field_id'			=> 'postgrid_excerpt_background_padding',
 			'field_title' 	=> __( 'Excerpt Background Size', 'mp_stacks_postgrid'),
-			'field_description' 	=> __( 'How many pixels bigger should the Excerpt Background be than the Text? Default: 0', 'mp_stacks_postgrid' ),
+			'field_description' 	=> __( 'How many pixels bigger should the Excerpt Background be than the Text? Default: 18', 'mp_stacks_postgrid' ),
 			'field_type' 	=> 'number',
-			'field_value' => '',
+			'field_value' => '18',
 			'field_showhider' => 'postgrid_excerpt_background_settings',
 		),
 		array(
@@ -538,7 +548,7 @@ function mp_stacks_postgrid_create_meta_box(){
 			'field_title' 	=> __( 'Excerpt Background Color', 'mp_stacks_postgrid'),
 			'field_description' 	=> __( 'What color should the excerpt background be? Default: #FFF (White)', 'mp_stacks_postgrid' ),
 			'field_type' 	=> 'colorpicker',
-			'field_value' => '',
+			'field_value' => '#FFF',
 			'field_showhider' => 'postgrid_excerpt_background_settings',
 		),
 		array(
@@ -546,7 +556,7 @@ function mp_stacks_postgrid_create_meta_box(){
 			'field_title' 	=> __( 'Excerpt Background Opacity', 'mp_stacks_postgrid'),
 			'field_description' 	=> __( 'Set the opacity percentage? Default: 100', 'mp_stacks_postgrid' ),
 			'field_type' 	=> 'number',
-			'field_value' => '',
+			'field_value' => '100',
 			'field_showhider' => 'postgrid_excerpt_background_settings',
 		),
 		
