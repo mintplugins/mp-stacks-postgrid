@@ -25,6 +25,7 @@
 	position:relative;
 	display:table;	
 	width:100%;
+	overflow:hidden;
 }
 .mp-stacks-postgrid-item-image-overlay{
 	position: absolute;
