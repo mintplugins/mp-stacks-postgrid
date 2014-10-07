@@ -33,8 +33,12 @@ function mp_stacks_postgrid_enqueue_scripts(){
 	//Enqueue velocity JS
 	wp_enqueue_script( 'velocity_js', plugins_url( 'js/jquery.velocity.min.js', dirname( __FILE__ ) ), array( 'jquery' ) );
 	
+	//masonry script
+	wp_enqueue_script( 'masonry' );
+			
 	//Enqueue postgrid JS
-	wp_enqueue_script( 'mp_stacks_postgrid_js', plugins_url( 'js/postgrid.js', dirname( __FILE__ ) ), array( 'jquery', 'velocity_js' ) );
+	wp_enqueue_script( 'mp_stacks_postgrid_js', plugins_url( 'js/postgrid.js', dirname( __FILE__ ) ), array( 'jquery', 'velocity_js', 'masonry' ) );
+	
 	
 	//Localize the postgrid js
 	wp_localize_script( 'mp_stacks_postgrid_js', 'mp_stacks_postgrid_vars', array(

@@ -78,11 +78,8 @@ function mp_stacks_brick_content_output_postgrid( $default_content_output, $mp_s
 	//Get Read More Text for excerpts
 	$read_more_text = mp_core_get_post_meta($post_id, 'postgrid_excerpt_read_more_text', __( '...Read More', 'mp_stacks_postgrid' ) );
 	
-	//Get Download Output
-	$postgrid_output = '<div class="mp-stacks-postgrid">';
-	
 	//Get JS output to animate the titles on mouse over and out
-	$postgrid_output .= mp_core_js_mouse_over_animate_child( '#mp-brick-' . $post_id . ' .mp-stacks-postgrid-item', '.mp-stacks-postgrid-item-title-holder', mp_core_get_post_meta( $post_id, 'postgrid_title_animation_keyframes', array() ) ); 
+	$postgrid_output = mp_core_js_mouse_over_animate_child( '#mp-brick-' . $post_id . ' .mp-stacks-postgrid-item', '.mp-stacks-postgrid-item-title-holder', mp_core_get_post_meta( $post_id, 'postgrid_title_animation_keyframes', array() ) ); 
 	
 	//Get JS output to animate the titles background on mouse over and out
 	if ( $postgrid_show_title_backgrounds ){
@@ -98,12 +95,16 @@ function mp_stacks_brick_content_output_postgrid( $default_content_output, $mp_s
 	//Get JS output to animate the images overlays on mouse over and out
 	$postgrid_output .= mp_core_js_mouse_over_animate_child( '#mp-brick-' . $post_id . ' .mp-stacks-postgrid-item', '.mp-stacks-postgrid-item-image-overlay', mp_core_get_post_meta( $post_id, 'postgrid_image_overlay_animation_keyframes', array() ) ); 
 	
+	//Get Download Output
+	$postgrid_output .= '<div class="mp-stacks-postgrid">';
+	
 	//Set counter to 0
 	$counter = 1;
 			
 	//Set the args for the new query
 	$postgrid_args = array(
 		'order' => 'DESC',
+		'post_status' => 'publish',
 		'posts_per_page' => $postgrid_per_page,
 		'tax_query' => array(
 			'relation' => 'AND',
@@ -283,12 +284,12 @@ function mp_stacks_brick_content_output_postgrid( $default_content_output, $mp_s
 		endwhile;
 	}
 	
+	$postgrid_output .= '</div>';
+	
 	//If there are still more posts in this taxonomy
 	if ( $total_posts > $post_offset && $postgrid_show_load_more_button ){
-		$postgrid_output .= '<a mp_post_id="' . $post_id . '" mp_brick_offset="' . $post_offset . '" mp_stacks_postgrid_counter="' . $counter . '" class="button mp-stacks-postgrid-load-more-button">' . $postgrid_load_more_text . '</a>';	
+		$postgrid_output .= '<div class="mp-stacks-postgrid-load-more-container"><a mp_post_id="' . $post_id . '" mp_brick_offset="' . $post_offset . '" mp_stacks_postgrid_counter="' . $counter . '" class="button mp-stacks-postgrid-load-more-button">' . $postgrid_load_more_text . '</a></div>';	
 	}
-	
-	$postgrid_output .= '</div>';
 	
 	//Content output
 	$content_output .= $postgrid_output;
@@ -367,6 +368,7 @@ function mp_postgrid_ajax_load_more(){
 	$postgrid_args = array(
 		'order' => 'DESC',
 		'posts_per_page' => $postgrid_per_page,
+		'post_status' => 'publish',
 		'offset'     =>  $post_offset,
 		'tax_query' => array(
 			'relation' => 'AND',
@@ -386,8 +388,7 @@ function mp_postgrid_ajax_load_more(){
 	
 	$css_output = NULL;
 	
-	//jQuery Trigger to reset all postgrid animations to their first frames
-	$postgrid_output = '<script type="text/javascript">jQuery(document).ready(function($){ $(document).trigger("mp_core_animation_set_first_keyframe_trigger"); });</script>';
+	$postgrid_output = NULL;
 	
 	//Loop through the stack group		
 	if ( $postgrid_query->have_posts() ) {
@@ -545,14 +546,24 @@ function mp_postgrid_ajax_load_more(){
 		endwhile;
 	}
 	
-	//If there are still more posts in this taxonomy
-	if ( $total_posts > $post_offset && $postgrid_show_load_more_button ){
-		$postgrid_output .= '<a mp_post_id="' . $post_id . '" mp_brick_offset="' . $post_offset . '" mp_stacks_postgrid_counter="' . $counter . '" class="button mp-stacks-postgrid-load-more-button">' . $postgrid_load_more_text . '</a>';	
-	}
-	
 	$postgrid_output .= '</div>';
 	
-	echo $postgrid_output;
+	//jQuery Trigger to reset all postgrid animations to their first frames
+	$animation_trigger = '<script type="text/javascript">jQuery(document).ready(function($){ $(document).trigger("mp_core_animation_set_first_keyframe_trigger"); });</script>';
+	
+	//If there are still more posts in this taxonomy
+	if ( $total_posts > $post_offset && $postgrid_show_load_more_button ){
+		$ajax_button_output = '<div class="mp-stacks-postgrid-load-more-container"><a mp_post_id="' . $post_id . '" mp_brick_offset="' . $post_offset . '" mp_stacks_postgrid_counter="' . $counter . '" class="button mp-stacks-postgrid-load-more-button">' . $postgrid_load_more_text . '</a></div>';	
+	}
+	else{
+		$ajax_button_output = NULL;	
+	}
+	
+	echo json_encode( array(
+		'items' => $postgrid_output,
+		'button' => $ajax_button_output,
+		'animation_trigger' => $animation_trigger
+	) );
 	
 	die();
 			
