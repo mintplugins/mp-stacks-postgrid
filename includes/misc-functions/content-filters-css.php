@@ -120,9 +120,6 @@ function mp_stacks_brick_content_output_css_postgrid( $css_output, $post_id, $fi
 	
 	//Get CSS Output
 	$css_output .= '
-		#mp-brick-' . $post_id . ' .mp-stacks-postgrid{ ' . 
-			mp_core_css_line( 'margin', $postgrid_post_spacing, 'px' ) . 
-		'}
 		#mp-brick-' . $post_id . ' .mp-stacks-postgrid-item{' . 
 			mp_core_css_line( 'color', $postgrid_excerpt_color ) . 
 			mp_core_css_line( 'width', (100/$postgrid_per_row), '%' ) . 
