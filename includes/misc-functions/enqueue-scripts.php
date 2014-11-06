@@ -27,24 +27,17 @@
  */
 function mp_stacks_postgrid_enqueue_scripts(){
 			
-	//Enqueue postgrid CSS
-	wp_enqueue_style( 'mp_stacks_postgrid_css', plugins_url( 'css/postgrid.css', dirname( __FILE__ ) ) );
-	
 	//Enqueue velocity JS
-	wp_enqueue_script( 'velocity_js', plugins_url( 'js/jquery.velocity.min.js', dirname( __FILE__ ) ), array( 'jquery' ) );
+	wp_enqueue_script( 'velocity_js', MP_CORE_JS_SCRIPTS_URL . 'jquery.velocity.min.js', array( 'jquery' ) );
+	
+	//Enqueue Waypoints JS
+	wp_enqueue_script( 'waypoints_js', MP_CORE_JS_SCRIPTS_URL . 'waypoints.min.js', array( 'jquery' ) );
 	
 	//masonry script
 	wp_enqueue_script( 'masonry' );
 			
 	//Enqueue postgrid JS
-	wp_enqueue_script( 'mp_stacks_postgrid_js', plugins_url( 'js/postgrid.js', dirname( __FILE__ ) ), array( 'jquery', 'velocity_js', 'masonry' ) );
-	
-	
-	//Localize the postgrid js
-	wp_localize_script( 'mp_stacks_postgrid_js', 'mp_stacks_postgrid_vars', array(
-		'loading_text' =>  __('Loading...', 'mp_stacks_postgrid')
-	)
-	);
+	wp_enqueue_script( 'mp_stacks_postgrid_js', plugins_url( 'js/postgrid.js', dirname( __FILE__ ) ), array( 'jquery', 'velocity_js', 'masonry', 'waypoints_js' ) );
 
 }
  
@@ -60,8 +53,6 @@ add_action( 'wp_enqueue_scripts', 'mp_stacks_postgrid_enqueue_scripts' );
  */
 function mp_stacks_postgrid_admin_enqueue_scripts(){
 	
-	//Enqueue Admin PostGrid CSS
-	wp_enqueue_style( 'mp_stacks_postgrid_css', plugins_url( 'css/admin-postgrid.css', dirname( __FILE__ ) ) );
 
 }
  

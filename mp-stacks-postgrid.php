@@ -2,8 +2,8 @@
 /*
 Plugin Name: MP Stacks + PostGrid
 Plugin URI: http://mintplugins.com
-Description: Displays posts from WordPress categories in a grid in a Brick
-Version: 1.0.0.0
+Description: Displays posts from Easy Digital Downloads categories in a grid in a Brick
+Version: 1.0.0.5
 Author: Mint Plugins
 Author URI: http://mintplugins.com
 Text Domain: mp_stacks_postgrid
@@ -34,7 +34,7 @@ License: GPL2
 */
 // Plugin version
 if( !defined( 'MP_STACKS_POSTGRID_VERSION' ) )
-	define( 'MP_STACKS_POSTGRID_VERSION', '1.0.0.0' );
+	define( 'MP_STACKS_POSTGRID_VERSION', '1.0.0.5' );
 
 // Plugin Folder URL
 if( !defined( 'MP_STACKS_POSTGRID_PLUGIN_URL' ) )
@@ -154,10 +154,13 @@ function mp_stacks_postgrid_include_files(){
 		require( MP_STACKS_POSTGRID_PLUGIN_DIR . 'includes/metaboxes/mp-stacks-postgrid-meta/mp-stacks-postgrid-meta.php' );
 		
 		/**
-		 * Functions which assist with the creation of templates using this add-on
+		 * Add this add on to the list of Active MP Stacks Add Ons
 		 */
 		if ( function_exists('mp_stacks_developer_textdomain') ){
-			require( MP_STACKS_POSTGRID_PLUGIN_DIR . 'includes/misc-functions/stack-template-functions.php' );
+			function mp_stacks_postgrid_add_active( $required_add_ons ){
+				return $required_add_ons['mp_stacks_postgrid'] = 'MP Stacks + PostGrid';
+			}
+			add_filter( 'mp_stacks_active_add_ons', 'mp_stacks_postgrid_add_active' );
 		}
 		
 		/**
@@ -169,6 +172,26 @@ function mp_stacks_postgrid_include_files(){
 		 * Misc Functions 
 		 */
 		require( MP_STACKS_POSTGRID_PLUGIN_DIR . 'includes/misc-functions/misc-functions.php' );
+		
+		/**
+		 * Include all Grid Title Functions
+		 */
+		require( MP_STACKS_POSTGRID_PLUGIN_DIR . 'includes/misc-functions/grid-titles-setup.php' );
+		
+		/**
+		 * Include all Grid Excerpt Functions
+		 */
+		require( MP_STACKS_POSTGRID_PLUGIN_DIR . 'includes/misc-functions/grid-excerpts-setup.php' );
+		
+		/**
+		 * Include all Grid Price Functions
+		 */
+		require( MP_STACKS_POSTGRID_PLUGIN_DIR . 'includes/misc-functions/grid-dates-setup.php' );
+		
+		/**
+		 * Include all "Load More" Functions
+		 */
+		require( MP_STACKS_POSTGRID_PLUGIN_DIR . 'includes/misc-functions/load-more-setup.php' );
 				
 	}
 }

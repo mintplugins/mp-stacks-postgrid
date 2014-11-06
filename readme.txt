@@ -33,7 +33,7 @@ See full instructions at http://mintplugins.com/doc/mp-stacks
 
 == Changelog ==
 
-= 1.0.0.5 = July 30, 2014
+= 1.0.0.5 = Aug 1, 2014
 * Options added for animation, placement of text, text backgrounds
 * Changed post grid choices to only include post categories for the sake of simplicity
 * Ajax Load More button now changes to “Loading..” when clicked
