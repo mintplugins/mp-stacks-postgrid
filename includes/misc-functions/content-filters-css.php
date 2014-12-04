@@ -64,6 +64,9 @@ function mp_stacks_brick_content_output_css_postgrid( $css_output, $post_id, $fi
 		mp_core_css_line( 'padding', $postgrid_featured_images_inner_margin, 'px' ) . 
 	'}';
 	
+	//Get the css output for the image overlay for mobile
+	$css_output .= mp_stacks_grid_overlay_mobile_css( $post_id, 'postgrid_image_overlay_animation_keyframes' );
+	
 	return $css_output;
 	
 }
