@@ -376,7 +376,7 @@ add_filter( 'mp_stacks_postgrid_below', 'mp_stacks_postgrid_excerpt_below_over_c
 function mp_stacks_postgrid_excerpt_animation_js( $postgrid_output, $post_id ){
 	
 	//Get JS output to animate the excerpts on mouse over and out
-	$excerpt_animation_js = mp_core_js_mouse_over_animate_child( '#mp-brick-' . $post_id . ' .mp-stacks-postgrid-item', '.mp-stacks-postgrid-item-excerpt-holder', mp_core_get_post_meta( $post_id, 'postgrid_excerpt_animation_keyframes', array() ) ); 
+	$excerpt_animation_js = mp_core_js_mouse_over_animate_child( '#mp-brick-' . $post_id . ' .mp-stacks-grid-item', '.mp-stacks-postgrid-item-excerpt-holder', mp_core_get_post_meta( $post_id, 'postgrid_excerpt_animation_keyframes', array() ) ); 
 
 	return $postgrid_output . $excerpt_animation_js;
 }

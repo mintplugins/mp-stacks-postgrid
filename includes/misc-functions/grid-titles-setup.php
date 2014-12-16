@@ -330,7 +330,7 @@ add_filter( 'mp_stacks_postgrid_below', 'mp_stacks_postgrid_title_below_over_cal
 function mp_stacks_postgrid_title_animation_js( $postgrid_output, $post_id ){
 			
 	//Get JS output to animate the titles on mouse over and out
-	$title_animation_js = mp_core_js_mouse_over_animate_child( '#mp-brick-' . $post_id . ' .mp-stacks-postgrid-item', '.mp-stacks-postgrid-item-title-holder', mp_core_get_post_meta( $post_id, 'postgrid_title_animation_keyframes', array() ) ); 
+	$title_animation_js = mp_core_js_mouse_over_animate_child( '#mp-brick-' . $post_id . ' .mp-stacks-grid-item', '.mp-stacks-postgrid-item-title-holder', mp_core_get_post_meta( $post_id, 'postgrid_title_animation_keyframes', array() ) ); 
 
 	return $postgrid_output . $title_animation_js;
 }

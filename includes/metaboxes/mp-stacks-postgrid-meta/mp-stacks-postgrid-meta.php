@@ -39,9 +39,6 @@ function mp_stacks_postgrid_create_meta_box(){
 	 * Array which stores all info about the options within the metabox
 	 *
 	 */
-	$download_categories = mp_core_get_all_terms_by_tax('download_category'); 
-	$download_categories['related_downloads'] = __('Show Related Downloads based on Tag (only use this if the stack is sitting on a "Download" page).');
-	 
 	$mp_stacks_postgrid_items_array = array(
 	
 		//Use this to add new options at this point with the filter hook
@@ -64,7 +61,7 @@ function mp_stacks_postgrid_create_meta_box(){
 		),
 		'postgrid_posts_per_row' => array(
 			'field_id'			=> 'postgrid_per_row',
-			'field_title' 	=> __( 'Downloads Per Row', 'mp_stacks_postgrid'),
+			'field_title' 	=> __( 'Posts Per Row', 'mp_stacks_postgrid'),
 			'field_description' 	=> __( 'How many posts do you want from left to right before a new row starts? Default 3', 'mp_stacks_postgrid' ),
 			'field_type' 	=> 'number',
 			'field_value' => '3',
@@ -72,7 +69,7 @@ function mp_stacks_postgrid_create_meta_box(){
 		),
 		'postgrid_posts_per_page' => array(
 			'field_id'			=> 'postgrid_per_page',
-			'field_title' 	=> __( 'Total Downloads', 'mp_stacks_postgrid'),
+			'field_title' 	=> __( 'Total Posts', 'mp_stacks_postgrid'),
 			'field_description' 	=> __( 'How many posts do you want to show entirely? Default: 9', 'mp_stacks_postgrid' ),
 			'field_type' 	=> 'number',
 			'field_value' => '9',
@@ -219,7 +216,7 @@ function mp_stacks_postgrid_create_meta_box(){
 			'field_value' => '',
 		),
 		'postgrid_feat_img_overlay_desc' => array(
-			'field_id'			=> 'dl_grid_feat_overlay_img_desc',
+			'field_id'			=> 'postgrid_feat_overlay_img_desc',
 			'field_title' 	=> __( 'What is the Featured Images Overlay?', 'mp_stacks_postgrid'),
 			'field_description' 	=> __( 'It\'s a animate-able solid color which can sit on top of the image when the user\'s mouse hovers over the image. The keyframes to animate the overlay are managed here:', 'mp_stacks_postgrid' ),
 			'field_type' 	=> 'basictext',

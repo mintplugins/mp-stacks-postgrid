@@ -158,7 +158,8 @@ function mp_stacks_postgrid_include_files(){
 		 */
 		if ( function_exists('mp_stacks_developer_textdomain') ){
 			function mp_stacks_postgrid_add_active( $required_add_ons ){
-				return $required_add_ons['mp_stacks_postgrid'] = 'MP Stacks + PostGrid';
+				$required_add_ons['mp_stacks_postgrid'] = 'MP Stacks + PostGrid';
+				return $required_add_ons;
 			}
 			add_filter( 'mp_stacks_active_add_ons', 'mp_stacks_postgrid_add_active' );
 		}

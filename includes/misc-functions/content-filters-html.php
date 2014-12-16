@@ -101,6 +101,10 @@ function mp_stacks_postgrid_output( $post_id, $post_offset = NULL, $post_counter
 	$postgrid_taxonomy_term = mp_core_get_post_meta($post_id, 'postgrid_taxonomy_term', '');
 	$termid_taxname = explode( '*', $postgrid_taxonomy_term );
 	
+	if ( !isset( $termid_taxname[1] ) || !isset( $termid_taxname[0] ) ){
+		return;	
+	}
+	
 	//Set the args for the new query
 	$postgrid_args = array(
 		'order' => 'DESC',

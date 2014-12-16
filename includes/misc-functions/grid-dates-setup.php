@@ -325,7 +325,7 @@ add_filter( 'mp_stacks_postgrid_below', 'mp_stacks_postgrid_date_below_over_call
 function mp_stacks_postgrid_date_animation_js( $postgrid_output, $post_id ){
 	
 	//Get JS output to animate the dates on mouse over and out
-	$date_animation_js = mp_core_js_mouse_over_animate_child( '#mp-brick-' . $post_id . ' .mp-stacks-postgrid-item', '.mp-stacks-postgrid-item-date-holder', mp_core_get_post_meta( $post_id, 'postgrid_date_animation_keyframes', array() ) ); 
+	$date_animation_js = mp_core_js_mouse_over_animate_child( '#mp-brick-' . $post_id . ' .mp-stacks-grid-item', '.mp-stacks-postgrid-item-date-holder', mp_core_get_post_meta( $post_id, 'postgrid_date_animation_keyframes', array() ) ); 
 
 	return $postgrid_output . $date_animation_js;
 }
