@@ -91,6 +91,11 @@ function mp_stacks_postgrid_textdomain() {
 }
 add_action( 'init', 'mp_stacks_postgrid_textdomain', 1 );
 
+/**
+ * Activation Hook Function - Sets up Rewrite Rules etc
+ */
+require( MP_STACKS_POSTGRID_PLUGIN_DIR . 'includes/misc-functions/install.php' );
+
 /*
 |--------------------------------------------------------------------------
 | INCLUDES
