@@ -176,7 +176,9 @@ function mp_stacks_postgrid_output( $post_id, $post_offset = NULL, $post_counter
 			$postgrid_output .= '<script type="text/javascript">
 				jQuery(document).ready(function($){ 
 					//Activate Masonry for Grid Items
-					$( "#mp-brick-' . $post_id . ' .mp-stacks-grid" ).masonry();	
+					$( "#mp-brick-' . $post_id . ' .mp-stacks-grid" ).imagesLoaded(function(){
+						$( "#mp-brick-' . $post_id . ' .mp-stacks-grid" ).masonry();
+					});	
 				});
 				var masonry_grid_' . $post_id . ' = true;
 				</script>';
@@ -237,7 +239,15 @@ function mp_stacks_postgrid_output( $post_id, $post_offset = NULL, $post_counter
 							
 							$postgrid_output .= '<a href="' . get_permalink() . '" class="mp-stacks-grid-image-link">';
 							
-							$postgrid_output .= '<img src="' . mp_core_the_featured_image($grid_post_id, $postgrid_featured_images_width, $postgrid_featured_images_height) . '" class="mp-stacks-grid-item-image" title="' . the_title_attribute( 'echo=0' ) . '" />';
+							//Get the featured image and crop according to the user's specs
+							if ( $postgrid_featured_images_height > 0 && !empty( $postgrid_featured_images_height ) ){
+								$featured_image = mp_core_the_featured_image($grid_post_id, $postgrid_featured_images_width, $postgrid_featured_images_height);
+							}
+							else{
+								$featured_image = mp_core_the_featured_image( $grid_post_id, $postgrid_featured_images_width );	
+							}
+							
+							$postgrid_output .= '<img src="' . $featured_image . '" class="mp-stacks-grid-item-image" title="' . the_title_attribute( 'echo=0' ) . '" />';
 							
 							//Top Over
 							$postgrid_output .= '<div class="mp-stacks-grid-over-image-text-container-top">';

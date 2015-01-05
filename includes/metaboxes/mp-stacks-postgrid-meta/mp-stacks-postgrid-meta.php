@@ -77,7 +77,7 @@ function mp_stacks_postgrid_create_meta_box(){
 		),
 		'postgrid_post_spacing' => array(
 			'field_id'			=> 'postgrid_post_spacing',
-			'field_title' 	=> __( 'Download Spacing', 'mp_stacks_postgrid'),
+			'field_title' 	=> __( 'Post Spacing', 'mp_stacks_postgrid'),
 			'field_description' 	=> __( 'How much space would you like to have in between each post in pixels? Default 20', 'mp_stacks_postgrid' ),
 			'field_type' 	=> 'number',
 			'field_value' => '20',
@@ -113,17 +113,17 @@ function mp_stacks_postgrid_create_meta_box(){
 		'postgrid_feat_img_width' => array(
 			'field_id'			=> 'postgrid_featured_images_width',
 			'field_title' 	=> __( 'Featured Image Width', 'mp_stacks_postgrid'),
-			'field_description' 	=> __( 'How wide should the images be in pixels? Default 300', 'mp_stacks_postgrid' ),
+			'field_description' 	=> __( 'How wide should the images be in pixels? Default 500', 'mp_stacks_postgrid' ),
 			'field_type' 	=> 'number',
-			'field_value' => '300',
+			'field_value' => '500',
 			'field_showhider' => 'postgrid_featured_images_settings',
 		),
 		'postgrid_feat_img_height' => array(
 			'field_id'			=> 'postgrid_featured_images_height',
 			'field_title' 	=> __( 'Featured Image Height', 'mp_stacks_postgrid'),
-			'field_description' 	=> __( 'How high should the images be in pixels? Default 200. Set to 0 to scale height based on width without cropping image.', 'mp_stacks_postgrid' ),
+			'field_description' 	=> __( 'How high should the images be in pixels? Default 0. Set to 0 to scale without cropping the image.', 'mp_stacks_postgrid' ),
 			'field_type' 	=> 'number',
-			'field_value' => '200',
+			'field_value' => '0',
 			'field_showhider' => 'postgrid_featured_images_settings',
 		),
 		'postgrid_feat_img_inner_margin' => array(
