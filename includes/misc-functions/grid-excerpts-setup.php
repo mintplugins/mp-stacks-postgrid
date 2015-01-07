@@ -194,7 +194,7 @@ function mp_stacks_postgrid_excerpt_meta_options( $items_array ){
 			'field_id'			=> 'postgrid_excerpt_background_opacity',
 			'field_title' 	=> __( 'Excerpt Background Opacity', 'mp_stacks_postgrid'),
 			'field_description' 	=> __( 'Set the opacity percentage? Default: 100', 'mp_stacks_postgrid' ),
-			'field_type' 	=> 'number',
+			'field_type' 	=> 'input_range',
 			'field_value' => '100',
 			'field_showhider' => 'postgrid_excerpt_background_settings',
 		),
@@ -227,7 +227,7 @@ function mp_stacks_postgrid_excerpt_placement_options( $placement_options, $post
 	$placement_options['word_limit'] = mp_core_get_post_meta($post_id, 'postgrid_excerpt_word_limit', 20);
 	
 	//Get Read More Text for excerpts
-	$placement_options['read_more_text'] = mp_core_get_post_meta($post_id, 'postgrid_excerpt_read_more_text', __( '...Read More', 'mp_stacks_postgrid' ) );
+	$placement_options['read_more_text'] = mp_core_get_post_meta($post_id, 'postgrid_excerpt_read_more_text' );
 	
 	return $placement_options;	
 }

@@ -176,7 +176,7 @@ function mp_stacks_postgrid_title_meta_options( $items_array ){
 			'field_id'			=> 'postgrid_title_background_opacity',
 			'field_title' 	=> __( 'Title Background Opacity', 'mp_stacks_postgrid'),
 			'field_description' 	=> __( 'Set the opacity percentage? Default: 100', 'mp_stacks_postgrid' ),
-			'field_type' 	=> 'number',
+			'field_type' 	=> 'input_range',
 			'field_value' => '100',
 			'field_showhider' => 'postgrid_title_background_settings',
 		)
