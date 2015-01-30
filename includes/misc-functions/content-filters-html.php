@@ -247,7 +247,7 @@ function mp_stacks_postgrid_output( $post_id, $post_offset = NULL, $post_counter
 								$featured_image = mp_core_the_featured_image( $grid_post_id, $postgrid_featured_images_width );	
 							}
 							
-							$postgrid_output .= '<img src="' . $featured_image . '" class="mp-stacks-grid-item-image" title="' . the_title_attribute( 'echo=0' ) . '" />';
+							$postgrid_output .= '<img src="' . $featured_image . '" class="mp-stacks-grid-item-image" title="' . the_title_attribute( 'echo=0' ) . '" alt="' . the_title_attribute( 'echo=0' ) . '" />';
 							
 							//Top Over
 							$postgrid_output .= '<div class="mp-stacks-grid-over-image-text-container-top">';
