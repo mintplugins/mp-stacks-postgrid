@@ -38,6 +38,14 @@ function mp_stacks_postgrid_date_meta_options( $items_array ){
 			'field_type' 	=> 'showhider',
 			'field_value' => '',
 		),
+		'postgrid_date_format' => array(
+			'field_id'			=> 'postgrid_date_format',
+			'field_title' 	=> __( 'Date Format', 'mp_stacks_postgrid'),
+			'field_description' 	=> __( 'Set the date format for your Wordpress by', 'mp_stacks_postgrid' ) . ' <a href="' .  admin_url( 'options-general.php' ) . '">' . __( 'clicking here', 'mp_stacks_postgrid' ) . '</a>',
+			'field_type' 	=> 'basictext',
+			'field_value' => 'true',
+			'field_showhider' => 'postgrid_date_settings',
+		),
 		'postgrid_date_show' => array(
 			'field_id'			=> 'postgrid_date_show',
 			'field_title' 	=> __( 'Show Dates?', 'mp_stacks_postgrid'),
@@ -51,7 +59,7 @@ function mp_stacks_postgrid_date_meta_options( $items_array ){
 			'field_title' 	=> __( 'Date Placement', 'mp_stacks_postgrid'),
 			'field_description' 	=> __( 'Where would you like to place the date? Default: Over Image, Top-Left', 'mp_stacks_postgrid' ),
 			'field_type' 	=> 'select',
-			'field_value' => 'below_image_left',
+			'field_value' => 'over_image_top_left',
 			'field_select_values' => mp_stacks_get_text_position_options(),
 			'field_showhider' => 'postgrid_date_settings',
 		),
@@ -213,7 +221,7 @@ add_filter( 'mp_stacks_postgrid_placement_options', 'mp_stacks_postgrid_date_pla
  */
 function mp_stacks_postgrid_date( $post_id ){
 	
-	$the_date = get_the_date( 'F j, Y', $post_id );
+	$the_date = get_the_date( get_option( 'date_format' ), $post_id );
 
 	$postgrid_output = mp_stacks_grid_highlight_text_html( array( 
 		'class_name' => 'mp-stacks-postgrid-item-date',
