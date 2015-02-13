@@ -350,9 +350,10 @@ add_filter( 'mp_stacks_postgrid_animation_js', 'mp_stacks_postgrid_date_animatio
 function mp_stacks_postgrid_date_css( $css_output, $post_id ){
 	
 	$date_css_defaults = array(
-		'color' => NULL,
+		'color' => '#000',
 		'size' => 13,
 		'lineheight' => 13,
+		'padding' => 0,
 		'background_padding' => 5,
 		'background_color' => '#fff',
 		'background_opacity' => 100,

@@ -78,6 +78,14 @@ function mp_stacks_postgrid_title_meta_options( $items_array ){
 			'field_value' => '20',
 			'field_showhider' => 'postgrid_title_settings',
 		),
+		'postgrid_title_spacing' => array(
+			'field_id'			=> 'postgrid_title_spacing',
+			'field_title' 	=> __( 'Titles\' Spacing', 'mp_stacks_postgrid'),
+			'field_description' 	=> __( 'How much (minimum) space should there be around the entire title? Default: 0', 'mp_stacks_postgrid' ),
+			'field_type' 	=> 'number',
+			'field_value' => '0',
+			'field_showhider' => 'postgrid_title_settings',
+		),
 		'postgrid_title_animation_desc' => array(
 			'field_id'			=> 'postgrid_title_animation_description',
 			'field_title' 	=> __( 'Animate the Title upon Mouse-Over', 'mp_stacks_postgrid'),

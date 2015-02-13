@@ -396,6 +396,7 @@ function mp_stacks_postgrid_excerpt_css( $css_output, $post_id ){
 		'color' => NULL,
 		'size' => 15,
 		'lineheight' => 18,
+		'padding' => 0,
 		'background_padding' => 5,
 		'background_color' => '#fff',
 		'background_opacity' => 100,
