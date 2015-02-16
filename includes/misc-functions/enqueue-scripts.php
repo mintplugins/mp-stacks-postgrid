@@ -28,7 +28,7 @@
 function mp_stacks_postgrid_enqueue_scripts(){
 			
 	//Enqueue velocity JS
-	wp_enqueue_script( 'velocity_js', MP_CORE_JS_SCRIPTS_URL . 'jquery.velocity.min.js', array( 'jquery' ) );
+	wp_enqueue_script( 'velocity_js', MP_CORE_JS_SCRIPTS_URL . 'velocity.min.js', array( 'jquery' ) );
 	
 	//Enqueue Waypoints JS
 	wp_enqueue_script( 'waypoints_js', MP_CORE_JS_SCRIPTS_URL . 'waypoints.min.js', array( 'jquery' ) );
