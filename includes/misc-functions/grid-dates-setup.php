@@ -79,6 +79,14 @@ function mp_stacks_postgrid_date_meta_options( $items_array ){
 			'field_value' => '13',
 			'field_showhider' => 'postgrid_date_settings',
 		),
+		'postgrid_date_spacing' => array(
+			'field_id'			=> 'postgrid_date_spacing',
+			'field_title' 	=> __( 'Dates\' Spacing', 'mp_stacks_postgrid'),
+			'field_description' 	=> __( 'How much space should there be between the date and other text content (title, excerpt, etc)? Default: 10', 'mp_stacks_postgrid' ),
+			'field_type' 	=> 'number',
+			'field_value' => '10',
+			'field_showhider' => 'postgrid_date_settings',
+		),
 		//Date animation stuff
 		'postgrid_date_animation_desc' => array(
 			'field_id'			=> 'postgrid_date_animation_description',
@@ -353,7 +361,7 @@ function mp_stacks_postgrid_date_css( $css_output, $post_id ){
 		'color' => '#000',
 		'size' => 13,
 		'lineheight' => 13,
-		'padding' => 0,
+		'padding_top' => 10, //aka 'spacing'
 		'background_padding' => 5,
 		'background_color' => '#fff',
 		'background_opacity' => 100,

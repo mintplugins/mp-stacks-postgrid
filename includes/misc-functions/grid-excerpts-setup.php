@@ -79,6 +79,14 @@ function mp_stacks_postgrid_excerpt_meta_options( $items_array ){
 			'field_value' => '18',
 			'field_showhider' => 'postgrid_excerpt_settings',
 		),
+		'postgrid_excerpt_spacing' => array(
+			'field_id'			=> 'postgrid_excerpt_spacing',
+			'field_title' 	=> __( 'Excerpts\' Spacing', 'mp_stacks_postgrid'),
+			'field_description' 	=> __( 'How much space should there be between the excerpt and other text content (title, date, etc)? Default: 10', 'mp_stacks_postgrid' ),
+			'field_type' 	=> 'number',
+			'field_value' => '10',
+			'field_showhider' => 'postgrid_excerpt_settings',
+		),
 		'postgrid_excerpt_word_limit' => array(
 			'field_id'			=> 'postgrid_excerpt_word_limit',
 			'field_title' 	=> __( 'Word Limit for Excerpt', 'mp_stacks_postgrid'),
@@ -396,7 +404,7 @@ function mp_stacks_postgrid_excerpt_css( $css_output, $post_id ){
 		'color' => NULL,
 		'size' => 15,
 		'lineheight' => 18,
-		'padding' => 0,
+		'padding_top' => 10, //aka 'spacing'
 		'background_padding' => 5,
 		'background_color' => '#fff',
 		'background_opacity' => 100,

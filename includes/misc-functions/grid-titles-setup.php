@@ -81,9 +81,9 @@ function mp_stacks_postgrid_title_meta_options( $items_array ){
 		'postgrid_title_spacing' => array(
 			'field_id'			=> 'postgrid_title_spacing',
 			'field_title' 	=> __( 'Titles\' Spacing', 'mp_stacks_postgrid'),
-			'field_description' 	=> __( 'How much (minimum) space should there be around the entire title? Default: 0', 'mp_stacks_postgrid' ),
+			'field_description' 	=> __( 'How much space should there be between the title and other text content (excerpt, date, etc)? Default: 10', 'mp_stacks_postgrid' ),
 			'field_type' 	=> 'number',
-			'field_value' => '0',
+			'field_value' => '10',
 			'field_showhider' => 'postgrid_title_settings',
 		),
 		'postgrid_title_animation_desc' => array(
@@ -358,6 +358,7 @@ function mp_stacks_postgrid_title_css( $css_output, $post_id ){
 		'color' => NULL,
 		'size' => 20,
 		'lineheight' => 20,
+		'padding_top' => 10, //aka 'spacing'
 		'background_padding' => 5,
 		'background_color' => '#fff',
 		'background_opacity' => 100,

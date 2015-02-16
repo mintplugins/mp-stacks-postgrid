@@ -35,6 +35,12 @@ function mp_stacks_brick_content_output_css_postgrid( $css_output, $post_id, $fi
 	//Post Spacing (padding)
 	$postgrid_post_spacing = mp_core_get_post_meta($post_id, 'postgrid_post_spacing', '20');
 	
+	//Post Inner Margin (padding)
+	$postgrid_post_inner_margin = mp_core_get_post_meta($post_id, 'postgrid_post_inner_margin', '0');
+	
+	//Post Background Color
+	$postgrid_post_background_color = mp_core_get_post_meta($post_id, 'postgrid_post_background_color', '');
+		
 	//Padding inside the featured images
 	$postgrid_featured_images_inner_margin = mp_core_get_post_meta($post_id, 'postgrid_featured_images_inner_margin', '10' );
 	
@@ -45,6 +51,10 @@ function mp_stacks_brick_content_output_css_postgrid( $css_output, $post_id, $fi
 	//Use the Excerpt's Color as the default fallback for all text in the grid
 	$default_text_color = mp_core_get_post_meta( $post_id, 'postgrid_excerpt_color' );
 	
+	//Padding for items directly under the image
+	$postgrid_post_below_image_area_inner_margin = mp_core_get_post_meta( $post_id, 'postgrid_post_below_image_area_inner_margin', '0' );
+
+	
 	//Get CSS Output
 	
 	$css_output = '
@@ -52,7 +62,22 @@ function mp_stacks_brick_content_output_css_postgrid( $css_output, $post_id, $fi
 			mp_core_css_line( 'color', $default_text_color ) . 
 			mp_core_css_line( 'width', (100/$postgrid_per_row), '%' ) . 
 			mp_core_css_line( 'padding', $postgrid_post_spacing, 'px' ) . 
-	'}';
+	'}
+	#mp-brick-' . $post_id . ' .mp-stacks-grid-item-inner{' . 
+			mp_core_css_line( 'padding', $postgrid_post_inner_margin, 'px' ) . 
+			mp_core_css_line( 'background-color', $postgrid_post_background_color ) . '
+	}
+	#mp-brick-' . $post_id . ' .mp-stacks-grid-item-inner .mp-stacks-grid-item-below-image-holder{' . 
+			mp_core_css_line( 'padding', $postgrid_post_below_image_area_inner_margin, 'px' ) . '
+	}
+	/*Below image, remove the padding-top (spacing) from the first text item*/
+	#mp-brick-' . $post_id . ' .mp-stacks-grid-item-inner .mp-stacks-grid-item-below-image-holder [class*="link"]:first-child [class*="holder"]{
+		' . ( $postgrid_post_below_image_area_inner_margin != '0' ? 'padding-top:0px!important;' : NULL ) . '	
+	}
+	/*Over image, remove the padding-top (spacing) from the first text item*/
+	#mp-brick-' . $post_id . ' .mp-stacks-grid .mp-stacks-grid-item .mp-stacks-grid-item-inner .mp-stacks-grid-over-image-text-container-table-cell [class*="holder"]:first-child{
+		padding-top:0px;
+	}';
 	
 	$css_output .= apply_filters( 'mp_stacks_postgrid_css', $css_output, $post_id );
 	
