@@ -35,6 +35,10 @@ function mp_stacks_postgrid_create_meta_box(){
 		'metabox_priority' => 'low' 
 	);
 	
+	//All tax terms
+	$all_tax_terms = mp_core_get_all_terms_by_tax('category');
+	$all_tax_terms['related_posts'] = __('Show Related Posts based on Tag (only use this if the stack is sitting on a "Post").');
+	
 	/**
 	 * Array which stores all info about the options within the metabox
 	 *
@@ -44,14 +48,33 @@ function mp_stacks_postgrid_create_meta_box(){
 		//Use this to add new options at this point with the filter hook
 		'postgrid_meta_hook_anchor_0' => array( 'field_type' => 'hook_anchor'),
 		
-		'postgrid_taxonomy_term' => array(
-			'field_id'			=> 'postgrid_taxonomy_term',
-			'field_title' 	=> __( 'Select the Category or Tag you want to show', 'mp_stacks_postgrid'),
-			'field_description' 	=> '<br />' . __( 'What posts should be shown in the postgrid?', 'mp_stacks_postgrid' ),
-			'field_type' 	=> 'select',
+		'postgrid_taxonomy_showhider' => array(
+			'field_id'			=> 'postgrid_taxonomy_showhider',
+			'field_title' 	=> __( 'Post Categories/Tags', 'mp_stacks_postgrid'),
+			'field_description' 	=> __( '', 'mp_stacks_postgrid' ),
+			'field_type' 	=> 'showhider',
 			'field_value' => '',
-			'field_select_values' => mp_core_get_all_tax_terms()
 		),
+			'postgrid_taxonomy_terms' => array(
+				'field_id'			=> 'taxonomy_term',
+				'field_title' 	=> __( 'Select a Category or Tag you want to show', 'mp_stacks_postgrid'),
+				'field_description' 	=> __( 'What posts should be shown in the postgrid?', 'mp_stacks_postgrid' ),
+				'field_type' 	=> 'select',
+				'field_value' => '',
+				'field_select_values' => $all_tax_terms,
+				'field_repeater' => 'postgrid_taxonomy_terms',
+				'field_showhider' => 'postgrid_taxonomy_showhider'
+			),
+			'postgrid_taxonomy_bg_color' => array(
+				'field_id'			=> 'taxonomy_bg_color',
+				'field_title' 	=> __( 'Background Color for these posts (Optional).', 'mp_stacks_postgrid'),
+				'field_description' 	=> __( 'If you want these posts to have a background color, select it here. If not, leave this clear.', 'mp_stacks_postgrid' ),
+				'field_type' 	=> 'colorpicker',
+				'field_value' => '',
+				'field_repeater' => 'postgrid_taxonomy_terms',
+				'field_showhider' => 'postgrid_taxonomy_showhider'
+			),
+
 		'postgrid_layout_showhider' => array(
 			'field_id'			=> 'postgrid_layout_settings',
 			'field_title' 	=> __( 'Grid Layout Settings', 'mp_stacks_postgrid'),
@@ -99,17 +122,9 @@ function mp_stacks_postgrid_create_meta_box(){
 			'field_value' => '0',
 			'field_showhider' => 'postgrid_layout_settings',
 		),
-		'postgrid_post_background_color' => array(
-			'field_id'			=> 'postgrid_post_background_color',
-			'field_title' 	=> __( 'Post Background Color', 'mp_stacks_postgrid'),
-			'field_description' 	=> __( 'Leave this blank to have the background be transparent.', 'mp_stacks_postgrid' ),
-			'field_type' 	=> 'colorpicker',
-			'field_value' => '',
-			'field_showhider' => 'postgrid_layout_settings',
-		),
 		//Bg animation stuff
-		'postgrid_bg_color_settings' => array(
-			'field_id'			=> 'postgrid_bg_color_settings',
+		'postgrid_bg_settings' => array(
+			'field_id'			=> 'postgrid_bg_settings',
 			'field_title' 	=> __( 'Animate the Background', 'mp_stacks_postgrid'),
 			'field_description' 	=> __( 'Control the animations of the background when the user\'s mouse is over it by adding keyframes here:', 'mp_stacks_postgrid' ),
 			'field_type' 	=> 'showhider',
@@ -117,77 +132,77 @@ function mp_stacks_postgrid_create_meta_box(){
 			'field_showhider' => 'postgrid_layout_settings',
 		),
 			//Background color animation
-			'postgrid_bg_color_animation_repeater_title' => array(
-				'field_id'			=> 'postgrid_bg_color_animation_repeater_title',
+			'postgrid_bg_animation_repeater_title' => array(
+				'field_id'			=> 'postgrid_bg_animation_repeater_title',
 				'field_title' 	=> __( 'KeyFrame', 'mp_stacks_postgrid'),
 				'field_description' 	=> NULL,
 				'field_type' 	=> 'repeatertitle',
-				'field_repeater' => 'postgrid_bg_color_animation_keyframes',
-				'field_showhider' => 'postgrid_bg_color_settings',
+				'field_repeater' => 'postgrid_bg_animation_keyframes',
+				'field_showhider' => 'postgrid_bg_settings',
 			),
-			'postgrid_bg_color_animation_length' => array(
+			'postgrid_bg_animation_length' => array(
 				'field_id'			=> 'animation_length',
 				'field_title' 	=> __( 'Animation Length', 'mp_stacks_postgrid'),
 				'field_description' 	=> __( 'Set the length between this keyframe and the previous one in milliseconds. Default: 500', 'mp_stacks_postgrid' ),
 				'field_type' 	=> 'number',
 				'field_value' => '500',
-				'field_repeater' => 'postgrid_bg_color_animation_keyframes',
-				'field_showhider' => 'postgrid_bg_color_settings',
+				'field_repeater' => 'postgrid_bg_animation_keyframes',
+				'field_showhider' => 'postgrid_bg_settings',
 				'field_container_class' => 'mp_animation_length',
 			),
-			'postgrid_bg_color_animation_backgroundColorAlpha' => array(
+			'postgrid_bg_animation_color' => array(
+				'field_id'			=> 'backgroundColor',
+				'field_title' 	=> __( 'Color', 'mp_stacks_postgrid'),
+				'field_description' 	=> __( 'Set the color for the background at this keyframe. Leave blank for no color change', 'mp_stacks_postgrid' ),
+				'field_type' 	=> 'colorpicker',
+				'field_value' => '',
+				'field_repeater' => 'postgrid_bg_animation_keyframes',
+				'field_showhider' => 'postgrid_bg_settings',
+			),
+			'postgrid_bg_animation_backgroundColorAlpha' => array(
 				'field_id'			=> 'backgroundColorAlpha',
-				'field_title' 	=> __( 'Background Opacity', 'mp_stacks_postgrid'),
+				'field_title' 	=> __( 'Background Opacity (Requires Background Color)', 'mp_stacks_postgrid'),
 				'field_description' 	=> __( 'Set the opacity percentage for the background color at this keyframe. Default: 100', 'mp_stacks_postgrid' ),
 				'field_type' 	=> 'input_range',
 				'field_value' => '100',
-				'field_repeater' => 'postgrid_bg_color_animation_keyframes',
-				'field_showhider' => 'postgrid_bg_color_settings',
+				'field_repeater' => 'postgrid_bg_animation_keyframes',
+				'field_showhider' => 'postgrid_bg_settings',
 			),
-			'postgrid_bg_color_animation_color' => array(
-				'field_id'			=> 'backgroundColor',
-				'field_title' 	=> __( 'Color', 'mp_stacks_postgrid'),
-				'field_description' 	=> __( 'Set the color for the background at this keyframe. Default: 100', 'mp_stacks_postgrid' ),
-				'field_type' 	=> 'colorpicker',
-				'field_value' => '',
-				'field_repeater' => 'postgrid_bg_color_animation_keyframes',
-				'field_showhider' => 'postgrid_bg_color_settings',
-			),
-			'postgrid_bg_color_animation_rotation' => array(
+			'postgrid_bg_animation_rotation' => array(
 				'field_id'			=> 'rotateZ',
 				'field_title' 	=> __( 'Rotation', 'mp_stacks_postgrid'),
 				'field_description' 	=> __( 'Set the rotation degree angle at this keyframe. Default: 0', 'mp_stacks_postgrid' ),
 				'field_type' 	=> 'number',
 				'field_value' => '0',
-				'field_repeater' => 'postgrid_bg_color_animation_keyframes',
-				'field_showhider' => 'postgrid_bg_color_settings',
+				'field_repeater' => 'postgrid_bg_animation_keyframes',
+				'field_showhider' => 'postgrid_bg_settings',
 			),
-			'postgrid_bg_color_animation_x' => array(
+			'postgrid_bg_animation_x' => array(
 				'field_id'			=> 'translateX',
 				'field_title' 	=> __( 'X Position', 'mp_stacks_postgrid'),
 				'field_description' 	=> __( 'Set the X position, in relation to its starting position, at this keyframe. The unit is pixels. Default: 0', 'mp_stacks_postgrid' ),
 				'field_type' 	=> 'number',
 				'field_value' => '0',
-				'field_repeater' => 'postgrid_bg_color_animation_keyframes',
-				'field_showhider' => 'postgrid_bg_color_settings',
+				'field_repeater' => 'postgrid_bg_animation_keyframes',
+				'field_showhider' => 'postgrid_bg_settings',
 			),
-			'postgrid_bg_color_animation_y' => array(
+			'postgrid_bg_animation_y' => array(
 				'field_id'			=> 'translateY',
 				'field_title' 	=> __( 'Y Position', 'mp_stacks_postgrid'),
 				'field_description' 	=> __( 'Set the Y position, in relation to its starting position, at this keyframe. The unit is pixels. Default: 0', 'mp_stacks_postgrid' ),
 				'field_type' 	=> 'number',
 				'field_value' => '0',
-				'field_repeater' => 'postgrid_bg_color_animation_keyframes',
-				'field_showhider' => 'postgrid_bg_color_settings',
+				'field_repeater' => 'postgrid_bg_animation_keyframes',
+				'field_showhider' => 'postgrid_bg_settings',
 			),
-			'postgrid_bg_color_animation_scale' => array(
+			'postgrid_bg_animation_scale' => array(
 				'field_id'			=> 'scale',
 				'field_title' 	=> __( 'Scale', 'mp_stacks_postgrid'),
-				'field_description' 	=> __( 'Set the Scale % of this Image, in relation to its starting position, at this keyframe. The unit is pixels. Default: 100', 'mp_stacks_postgrid' ),
+				'field_description' 	=> __( 'Set the Scale % of this Post, in relation to its starting position, at this keyframe. The unit is pixels. Default: 100', 'mp_stacks_postgrid' ),
 				'field_type' 	=> 'number',
 				'field_value' => '100',
-				'field_repeater' => 'postgrid_bg_color_animation_keyframes',
-				'field_showhider' => 'postgrid_bg_color_settings',
+				'field_repeater' => 'postgrid_bg_animation_keyframes',
+				'field_showhider' => 'postgrid_bg_settings',
 			),
 		'postgrid_masonry' => array(
 			'field_id'			=> 'postgrid_masonry',

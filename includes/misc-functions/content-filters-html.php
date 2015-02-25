@@ -83,27 +83,37 @@ function mp_stacks_postgrid_output( $post_id, $post_offset = NULL, $post_counter
 	
 	global $wp_query;
 	
+	//Start up the PHP session if there isn't one already
+	if( !session_id() ){
+		session_start();
+	}
+	
+	//If we are NOT doing ajax get the parent's post id from the wp_query.
+	if ( !defined( 'DOING_AJAX' ) ){
+		$queried_object_id = $wp_query->queried_object_id;
+		$_SESSION['mp_stacks_downloadgrid_queryobjid_' . $post_id] = $queried_object_id;
+	}
+	//If we are doing ajax, get the parent's post id from the PHP session where it was stored on initial the page load.
+	else{
+		$queried_object_id = $_SESSION['mp_stacks_downloadgrid_queryobjid_' . $post_id];
+	}
+	
 	//Get this Brick Info
 	$post = get_post($post_id);
 	
 	$postgrid_output = NULL;
 	
-	//Get Download Taxonomy Term to Loop through
+	//Get Original Download Taxonomy Term to Loop through (old way)
 	$postgrid_taxonomy_term = mp_core_get_post_meta($post_id, 'postgrid_taxonomy_term', '');
+	
+	//Get taxonomy term repeater (new way)
+	$postgrid_taxonomy_terms = mp_core_get_post_meta($post_id, 'postgrid_taxonomy_terms', '');
 	
 	//Download per row
 	$postgrid_per_row = mp_core_get_post_meta($post_id, 'postgrid_per_row', '3');
 	
 	//Download per page
 	$postgrid_per_page = mp_core_get_post_meta($post_id, 'postgrid_per_page', '9');
-	
-	//Get PostGrid Metabox Repeater Array
-	$postgrid_taxonomy_term = mp_core_get_post_meta($post_id, 'postgrid_taxonomy_term', '');
-	$termid_taxname = explode( '*', $postgrid_taxonomy_term );
-	
-	if ( !isset( $termid_taxname[1] ) || !isset( $termid_taxname[0] ) ){
-		return;	
-	}
 	
 	//Set the args for the new query
 	$postgrid_args = array(
@@ -112,15 +122,72 @@ function mp_stacks_postgrid_output( $post_id, $post_offset = NULL, $post_counter
 		'post_status' => 'publish',
 		'posts_per_page' => $postgrid_per_page,
 		'tax_query' => array(
-			'relation' => 'AND',
-			array(
-				'taxonomy' => $termid_taxname[1],
-				'field'    => 'id',
-				'terms'    => $termid_taxname[0],
-				'operator' => 'IN'
-			)
+			'relation' => 'OR',
 		)
 	);	
+		
+	//If there are tax terms selected to show (the "new" way with multiple terms)
+	if ( is_array( $postgrid_taxonomy_terms ) && !empty( $postgrid_taxonomy_terms[0]['taxonomy_term'] ) ){
+		
+		//Loop through each term the user added to this postgrid
+		foreach( $postgrid_taxonomy_terms as $postgrid_taxonomy_term ){
+			
+			//If we should show related posts
+			if ( $postgrid_taxonomy_term['taxonomy_term'] == 'related_posts' ){
+				
+				$tags = wp_get_post_terms( $queried_object_id, 'post_tag' );
+				
+				if ( is_object( $tags ) ){
+					$tags_array = $tags;
+				}
+				elseif (is_array( $tags ) ){
+					$tags_array = isset( $tags[0] ) ? $tags[0] : NULL;
+				}
+				
+				$tag_slugs = wp_get_post_terms( $queried_object_id, 'post_tag', array("fields" => "slugs") );
+				
+				//Add the related tags as a tax_query to the WP_Query
+				$postgrid_args['tax_query'][] = array(
+					'taxonomy' => 'post_tag',
+					'field'    => 'slug',
+					'terms'    => $tag_slugs,
+				);
+							
+			}
+			else{
+				
+				//Add this term to the tax_query
+				$postgrid_args['tax_query'][] = array(
+					'taxonomy' => 'category',
+					'field'    => 'id',
+					'terms'    => $postgrid_taxonomy_term['taxonomy_term'],
+					'operator' => 'IN'
+				);
+			}
+		}
+	}
+	//if there is a single tax term to show (this is backward compatibility for before the terms selector was repeatable).
+	else if( !empty( $postgrid_taxonomy_term ) ){
+		
+		//Get PostGrid Metabox Repeater Array
+		$termid_taxname = explode( '*', $postgrid_taxonomy_term );
+		
+		if ( !isset( $termid_taxname[1] ) || !isset( $termid_taxname[0] ) ){
+			return;	
+		}
+			
+		//Add this term to the tax_query
+		$postgrid_args['tax_query'][] = array(
+			'taxonomy' => $termid_taxname[1],
+			'field'    => 'id',
+			'terms'    => $termid_taxname[0],
+			'operator' => 'IN'
+		);
+	}
+	//Otherwise there's nothing to show so get out of here
+	else{
+		return false;	
+	}
 	
 	//If we are using Offset
 	if ( !empty( $post_offset ) ){
@@ -201,7 +268,7 @@ function mp_stacks_postgrid_output( $post_id, $post_offset = NULL, $post_counter
 		$postgrid_output .= mp_core_js_mouse_over_animate_child( '#mp-brick-' . $post_id . ' .mp-stacks-grid-item', '.mp-stacks-grid-item-image-overlay',mp_core_get_post_meta( $post_id, 'postgrid_image_overlay_animation_keyframes', array() ) ); 
 		
 		//Get JS output to animate the background on mouse over and out
-		$postgrid_output .= mp_core_js_mouse_over_animate_child( '#mp-brick-' . $post_id . ' .mp-stacks-grid-item', '.mp-stacks-grid-item-inner',mp_core_get_post_meta( $post_id, 'postgrid_bg_color_animation_keyframes', array() ) ); 
+		$postgrid_output .= mp_core_js_mouse_over_animate_child( '#mp-brick-' . $post_id . ' .mp-stacks-grid-item', '.mp-stacks-grid-item-inner',mp_core_get_post_meta( $post_id, 'postgrid_bg_animation_keyframes', array() ) ); 
 		
 	}
 	
@@ -222,7 +289,69 @@ function mp_stacks_postgrid_output( $post_id, $post_offset = NULL, $post_counter
 				
 				$grid_post_id = get_the_ID();
 				
-				$postgrid_output .= '<div class="mp-stacks-grid-item"><div class="mp-stacks-grid-item-inner">';
+				//Reset Grid Classes String
+				$grid_item_classes = NULL;
+				$grid_item_inner_bg_color_style_tag = NULL;
+				$grid_item_inner_bg_color = NULL;
+				
+				//If there are multiple tax terms selected to show
+				if ( is_array( $postgrid_taxonomy_terms ) && !empty( $postgrid_taxonomy_terms[0]['taxonomy_term'] ) ){
+					
+					//Loop through each term the user added to this postgrid
+					foreach( $postgrid_taxonomy_terms as $postgrid_taxonomy_term ){
+						
+						//If we should show related posts
+						if ( $postgrid_taxonomy_term['taxonomy_term'] == 'related_posts' ){
+							
+							//Add the tags to the classes for the grid item
+							$tags = wp_get_post_terms( $queried_object_id, 'post_tag' );
+				
+							if ( is_object( $tags ) ){
+								$tags_array = $tags;
+							}
+							elseif (is_array( $tags ) ){
+								$tags_array = isset( $tags[0] ) ? $tags[0] : NULL;
+							}
+							
+							$tag_slugs = wp_get_post_terms( $queried_object_id, 'post_tag', array("fields" => "slugs") );
+							
+							if ( is_array( $tag_slugs ) ){
+								
+								foreach( $tag_slugs as $tag_slug ){
+									
+									$grid_item_classes .= ' ' . $tag_slug . ' ';
+							
+								}
+							}
+							
+							//Add the bg color for this post
+							if ( !empty( $postgrid_taxonomy_term['taxonomy_bg_color'] ) ){
+								$grid_item_inner_bg_color_style_tag = '<style type="text/css" scoped>#mp-brick-' . $post_id . ' .mp-stacks-grid-item-' . $grid_post_id . ' .mp-stacks-grid-item-inner{ background-color:' . $postgrid_taxonomy_term['taxonomy_bg_color'] . ';</style>';
+								$grid_item_inner_bg_color = $postgrid_taxonomy_term['taxonomy_bg_color'];
+							}
+						}
+						//If the current post has this term, make that term one of the classes for the grid item
+						else if ( has_term( $postgrid_taxonomy_term['taxonomy_term'], 'category', $grid_post_id ) ){
+							
+							//Add the term slug to the grid item classes
+							$term_slug = get_term_by( 'id', $postgrid_taxonomy_term['taxonomy_term'], 'category' );
+							$grid_item_classes .= ' ' . $term_slug->slug . ' ';
+							
+							//Set the bg color for this post
+							if ( !empty( $postgrid_taxonomy_term['taxonomy_bg_color'] ) ){
+								$grid_item_inner_bg_color_style_tag = '<style type="text/css" scoped>#mp-brick-' . $post_id . ' .mp-stacks-grid-item-' . $grid_post_id . ' .mp-stacks-grid-item-inner{ background-color:' . $postgrid_taxonomy_term['taxonomy_bg_color'] . ';</style>';
+								$grid_item_inner_bg_color = $postgrid_taxonomy_term['taxonomy_bg_color'];
+							}
+							
+						}
+						
+					}
+				}
+				
+				$postgrid_output .= '<div class="mp-stacks-grid-item mp-stacks-grid-item-' . $grid_post_id . $grid_item_classes . '">';
+					$postgrid_output .= '<div class="mp-stacks-grid-item-inner" ' . (!empty( $grid_item_inner_bg_color ) ? 'mp-default-bg-color="' . $grid_item_inner_bg_color . '"' : NULL) . '>';
+						//Css style tag which applies the user-chosen background color to this post.
+						$postgrid_output .= $grid_item_inner_bg_color_style_tag;
 					
 					//Microformats
 					$postgrid_output .= '
