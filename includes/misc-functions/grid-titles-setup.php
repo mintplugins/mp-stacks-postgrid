@@ -73,9 +73,9 @@ function mp_stacks_postgrid_title_meta_options( $items_array ){
 		'postgrid_title_lineheight' => array(
 			'field_id'			=> 'postgrid_title_lineheight',
 			'field_title' 	=> __( 'Titles\' Line Height', 'mp_stacks_postgrid'),
-			'field_description' 	=> __( 'Enter the line height for the excerpt text. Default: 20', 'mp_stacks_postgrid' ),
+			'field_description' 	=> __( 'Enter the line height for the excerpt text. Default: 24', 'mp_stacks_postgrid' ),
 			'field_type' 	=> 'number',
-			'field_value' => '20',
+			'field_value' => '24',
 			'field_showhider' => 'postgrid_title_settings',
 		),
 		'postgrid_title_spacing' => array(
@@ -357,7 +357,7 @@ function mp_stacks_postgrid_title_css( $css_output, $post_id ){
 	$title_css_defaults = array(
 		'color' => NULL,
 		'size' => 20,
-		'lineheight' => 20,
+		'lineheight' => 24,
 		'padding_top' => 10, //aka 'spacing'
 		'background_padding' => 5,
 		'background_color' => '#fff',

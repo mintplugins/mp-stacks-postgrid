@@ -74,9 +74,9 @@ function mp_stacks_postgrid_excerpt_meta_options( $items_array ){
 		'postgrid_excerpt_lineheight' => array(
 			'field_id'			=> 'postgrid_excerpt_lineheight',
 			'field_title' 	=> __( 'Excerpt Line Height', 'mp_stacks_postgrid'),
-			'field_description' 	=> __( 'Enter the line height for the excerpt text. Default: 18', 'mp_stacks_postgrid' ),
+			'field_description' 	=> __( 'Enter the line height for the excerpt text. Default: 19', 'mp_stacks_postgrid' ),
 			'field_type' 	=> 'number',
-			'field_value' => '18',
+			'field_value' => '19',
 			'field_showhider' => 'postgrid_excerpt_settings',
 		),
 		'postgrid_excerpt_spacing' => array(
@@ -403,7 +403,7 @@ function mp_stacks_postgrid_excerpt_css( $css_output, $post_id ){
 	$excerpt_css_defaults = array(
 		'color' => NULL,
 		'size' => 15,
-		'lineheight' => 18,
+		'lineheight' => 19,
 		'padding_top' => 10, //aka 'spacing'
 		'background_padding' => 5,
 		'background_color' => '#fff',
