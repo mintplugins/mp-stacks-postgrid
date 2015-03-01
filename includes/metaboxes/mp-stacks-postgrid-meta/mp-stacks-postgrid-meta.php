@@ -254,6 +254,14 @@ function mp_stacks_postgrid_create_meta_box(){
 			'field_value' => '0',
 			'field_showhider' => 'postgrid_featured_images_settings',
 		),
+		'postgrid_feat_img_max_width' => array(
+			'field_id'			=> 'postgrid_feat_img_max_width',
+			'field_title' 	=> __( 'Featured Image Max Width', 'mp_stacks_postgrid'),
+			'field_description' 	=> __( 'In most scenarios you\'ll want to leave this blank. But if you want the images to display smaller than the width of each grid item, enter the max-width in pixels here.',  'mp_stacks_postgrid' ),
+			'field_type' 	=> 'number',
+			'field_value' => '',
+			'field_showhider' => 'postgrid_featured_images_settings',
+		),
 		'postgrid_feat_img_inner_margin' => array(
 			'field_id'			=> 'postgrid_featured_images_inner_margin',
 			'field_title' 	=> __( 'Featured Image Inner Margin', 'mp_stacks_postgrid'),

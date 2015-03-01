@@ -45,6 +45,10 @@ function mp_stacks_brick_content_output_css_postgrid( $css_output, $post_id, $fi
 	$postgrid_images_overlay_color = mp_core_get_post_meta($post_id, 'postgrid_images_overlay_color', '#FFF' );
 	$postgrid_images_overlay_opacity = mp_core_get_post_meta($post_id, 'postgrid_images_overlay_opacity', '0' );
 	
+	//Max Image Width
+	$postgrid_feat_img_max_width = mp_core_get_post_meta($post_id, 'postgrid_feat_img_max_width', '0' );
+	$img_max_width_css = empty( $postgrid_feat_img_max_width ) ? NULL : '#mp-brick-' . $post_id . ' .mp-stacks-grid-item-image-holder{ max-width: ' . $postgrid_feat_img_max_width . 'px;}';
+	
 	//Use the Excerpt's Color as the default fallback for all text in the grid
 	$default_text_color = mp_core_get_post_meta( $post_id, 'postgrid_excerpt_color' );
 	
@@ -62,7 +66,8 @@ function mp_stacks_brick_content_output_css_postgrid( $css_output, $post_id, $fi
 	'}
 	#mp-brick-' . $post_id . ' .mp-stacks-grid-item-inner{' . 
 			mp_core_css_line( 'padding', $postgrid_post_inner_margin, 'px' ) . '
-	}
+	}' . 
+	$img_max_width_css . '
 	#mp-brick-' . $post_id . ' .mp-stacks-grid-item-inner .mp-stacks-grid-item-below-image-holder{' . 
 			mp_core_css_line( 'padding', $postgrid_post_below_image_area_inner_margin, 'px' ) . '
 	}

@@ -46,16 +46,15 @@ add_filter('mp_stacks_brick_content_output', 'mp_stacks_brick_content_output_pos
  */
 function mp_postgrid_ajax_load_more(){
 	
-	if ( !isset( $_POST['mp_stacks_grid_post_id'] ) || !isset( $_POST['mp_stacks_grid_offset'] ) || !isset( $_POST['mp_stacks_grid_post_counter'] ) ){
+	if ( !isset( $_POST['mp_stacks_grid_post_id'] ) || !isset( $_POST['mp_stacks_grid_offset'] ) ){
 		return;	
 	}
 	
 	$post_id = $_POST['mp_stacks_grid_post_id'];
 	$post_offset = $_POST['mp_stacks_grid_offset'];
-	$post_counter = $_POST['mp_stacks_grid_post_counter'];
 
 	//Because we run the same function for this and for "Load More" ajax, we call a re-usable function which returns the output
-	$postgrid_output = mp_stacks_postgrid_output( $post_id, $post_offset, $post_counter );
+	$postgrid_output = mp_stacks_postgrid_output( $post_id, $post_offset );
 	
 	echo json_encode( array(
 		'items' => $postgrid_output['postgrid_output'],
@@ -79,7 +78,7 @@ add_action( 'wp_ajax_nopriv_mp_stacks_postgrid_load_more', 'mp_postgrid_ajax_loa
  * @param    $post_offset Int - The number of posts deep we are into the loop (if doing ajax). If not doing ajax, set this to 0;
  * @return   Array - HTML output from the Grid Loop, The Load More Button, and the Animation Trigger in an array for usage in either ajax or not.
  */
-function mp_stacks_postgrid_output( $post_id, $post_offset = NULL, $post_counter = 1 ){
+function mp_stacks_postgrid_output( $post_id, $post_offset = NULL ){
 	
 	global $wp_query;
 	
@@ -445,22 +444,7 @@ function mp_stacks_postgrid_output( $post_id, $post_offset = NULL, $post_counter
 					$postgrid_output .= '</div>';
 				
 				$postgrid_output .= '</div></div>';
-				
-				if ( $postgrid_per_row == $post_counter ){
-					
-					//Add clear div to bump a new row
-					$postgrid_output .= '<div class="mp-stacks-grid-item-clearedfix"></div>';
-					
-					//Reset counter
-					$post_counter = 1;
-				}
-				else{
-					
-					//Increment Counter
-					$post_counter = $post_counter + 1;
-					
-				}
-				
+								
 				//Increment Offset
 				$post_offset = $post_offset + 1;
 				
@@ -482,7 +466,6 @@ function mp_stacks_postgrid_output( $post_id, $post_offset = NULL, $post_counter
 		 'total_posts' => $total_posts, 
 		 'posts_per_page' => $postgrid_per_page, 
 		 'paged' => $postgrid_args['paged'], 
-		 'post_counter' => $post_counter, 
 		 'post_offset' => $post_offset,
 		 'brick_slug' => $post->post_name
 	);

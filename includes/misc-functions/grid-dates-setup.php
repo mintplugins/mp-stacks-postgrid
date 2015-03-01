@@ -82,7 +82,7 @@ function mp_stacks_postgrid_date_meta_options( $items_array ){
 		'postgrid_date_spacing' => array(
 			'field_id'			=> 'postgrid_date_spacing',
 			'field_title' 	=> __( 'Dates\' Spacing', 'mp_stacks_postgrid'),
-			'field_description' 	=> __( 'How much space should there be between the date and other text content (title, excerpt, etc)? Default: 10', 'mp_stacks_postgrid' ),
+			'field_description' 	=> __( 'How much space should there be between the date and any content directly above it? Default: 10', 'mp_stacks_postgrid' ),
 			'field_type' 	=> 'number',
 			'field_value' => '10',
 			'field_showhider' => 'postgrid_date_settings',
