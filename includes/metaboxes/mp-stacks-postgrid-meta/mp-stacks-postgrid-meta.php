@@ -22,7 +22,7 @@
  * @return   void
  */
 function mp_stacks_postgrid_create_meta_box(){
-		
+			
 	/**
 	 * Array which stores all info about the new metabox
 	 *
@@ -35,9 +35,21 @@ function mp_stacks_postgrid_create_meta_box(){
 		'metabox_priority' => 'low' 
 	);
 	
-	//All tax terms
-	$all_tax_terms = mp_core_get_all_terms_by_tax('category');
+	
+	//If thre is a post id, filter the type of taxonomy so people can make it use their own
+	if ( isset( $_GET['post'] ) ){
+		//All tax terms in the category taonomy
+		$all_tax_terms = mp_core_get_all_terms_by_tax( apply_filters( 'mp_stacks_postgrid_main_tax_slug', 'category', $_GET['post'] ) );
+	}
+	else{
+		//All tax terms in the category taonomy
+		$all_tax_terms = mp_core_get_all_terms_by_tax( 'category' );
+	}
+	
+	//Add "Related Posts" Option
 	$all_tax_terms['related_posts'] = __('Show Related Posts based on Tag (only use this if the stack is sitting on a "Post").');
+		
+	
 	
 	/**
 	 * Array which stores all info about the options within the metabox
@@ -74,6 +86,7 @@ function mp_stacks_postgrid_create_meta_box(){
 				'field_repeater' => 'postgrid_taxonomy_terms',
 				'field_showhider' => 'postgrid_taxonomy_showhider'
 			),
+			
 
 		'postgrid_layout_showhider' => array(
 			'field_id'			=> 'postgrid_layout_settings',
