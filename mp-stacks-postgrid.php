@@ -195,6 +195,11 @@ function mp_stacks_postgrid_include_files(){
 		require( MP_STACKS_POSTGRID_PLUGIN_DIR . 'includes/misc-functions/grid-dates-setup.php' );
 		
 		/**
+		 * Include all Isotope JS Functions
+		 */
+		require( MP_STACKS_POSTGRID_PLUGIN_DIR . 'includes/misc-functions/isotope-setup.php' );
+		
+		/**
 		 * Include all "Load More" Functions
 		 */
 		require( MP_STACKS_POSTGRID_PLUGIN_DIR . 'includes/misc-functions/load-more-setup.php' );
