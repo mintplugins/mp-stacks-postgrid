@@ -26,6 +26,12 @@
  * Filter: mp_stacks_postgrid_css_location
  */
 function mp_stacks_postgrid_enqueue_scripts(){
+	
+	//Enqueue MP stacks Grid CSS
+	wp_enqueue_style( 'mp-stacks-grid-css', MP_STACKS_PLUGIN_URL . 'includes/css/mp-stacks-grid-styles.css', MP_STACKS_VERSION );
+	
+	//Enqueue Font Awesome CSS
+	wp_enqueue_style( 'fontawesome', plugins_url( '/fonts/font-awesome-4.0.3/css/font-awesome.css', dirname( __FILE__ ) ) );
 			
 	//Enqueue velocity JS
 	wp_enqueue_script( 'velocity_js', MP_CORE_JS_SCRIPTS_URL . 'velocity.min.js', array( 'jquery' ), MP_STACKS_POSTGRID_VERSION );
@@ -33,11 +39,14 @@ function mp_stacks_postgrid_enqueue_scripts(){
 	//Enqueue Waypoints JS
 	wp_enqueue_script( 'waypoints_js', MP_CORE_JS_SCRIPTS_URL . 'waypoints.min.js', array( 'jquery' ), MP_STACKS_POSTGRID_VERSION );
 	
+	//Enqueue Isotope JS
+	wp_enqueue_script( 'isotope_js', MP_CORE_JS_SCRIPTS_URL . 'isotope.pkgd.min.js', array( 'jquery' ), MP_STACKS_POSTGRID_VERSION );
+	
 	//masonry script
 	wp_enqueue_script( 'masonry' );
 			
-	//Enqueue postgrid JS
-	wp_enqueue_script( 'mp_stacks_postgrid_js', plugins_url( 'js/postgrid.js', dirname( __FILE__ ) ), array( 'jquery', 'velocity_js', 'masonry', 'waypoints_js' ), MP_STACKS_POSTGRID_VERSION );
+	//Enqueue MP Stacks Grid JS
+	wp_enqueue_script( 'mp_stacks_grid_js', MP_STACKS_PLUGIN_URL . 'includes/js/mp-stacks-grids.js', array( 'jquery', 'masonry', 'isotope_js', 'waypoints_js', 'velocity_js' ), MP_STACKS_VERSION );
 
 }
  

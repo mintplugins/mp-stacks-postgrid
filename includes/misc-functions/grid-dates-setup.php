@@ -196,7 +196,7 @@ function mp_stacks_postgrid_date_meta_options( $items_array ){
 	return mp_core_insert_meta_fields( $items_array, $new_fields, 'postgrid_meta_hook_anchor_2' );
 
 }
-add_filter( 'mp_stacks_postgrid_items_array', 'mp_stacks_postgrid_date_meta_options', 97 );
+add_filter( 'mp_stacks_postgrid_items_array', 'mp_stacks_postgrid_date_meta_options', 11 );
 
 /**
  * Add the placement options for the Date using placement options filter hook
@@ -335,17 +335,23 @@ add_filter( 'mp_stacks_postgrid_below', 'mp_stacks_postgrid_date_below_over_call
  *
  * @access   public
  * @since    1.0.0
- * @param    $postgrid_output String - The output for postgrid up until this point.
- * @return   $postgrid_output String - The incoming HTML with the new JS animation for the date appended.
+ * @param    $existing_filter_output String - Any output already returned to this filter previously
+ * @param    $post_id String - the ID of the Brick where all the meta is saved.
+ * @param    $meta_prefix String - the prefix to put before each meta_field key to differentiate it from other plugins. :EG "postgrid"
+ * @return   $new_grid_output - the existing grid output with additional thigns added by this function.
  */
-function mp_stacks_postgrid_date_animation_js( $postgrid_output, $post_id ){
+function mp_stacks_postgrid_date_animation_js( $existing_filter_output, $post_id, $meta_prefix ){
+	
+	if ( $meta_prefix != 'postgrid' ){
+		return $existing_filter_output;	
+	}
 	
 	//Get JS output to animate the dates on mouse over and out
 	$date_animation_js = mp_core_js_mouse_over_animate_child( '#mp-brick-' . $post_id . ' .mp-stacks-grid-item', '.mp-stacks-postgrid-item-date-holder', mp_core_get_post_meta( $post_id, 'postgrid_date_animation_keyframes', array() ) ); 
-
-	return $postgrid_output . $date_animation_js;
+	
+	return $existing_filter_output .= $date_animation_js;
 }
-add_filter( 'mp_stacks_postgrid_animation_js', 'mp_stacks_postgrid_date_animation_js', 10, 2 );
+add_filter( 'mp_stacks_grid_js', 'mp_stacks_postgrid_date_animation_js', 10, 3 );
 		
 /**
  * Add the CSS for the date to PostGrid's CSS

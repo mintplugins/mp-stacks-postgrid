@@ -163,7 +163,7 @@ function mp_stacks_postgrid_excerpt_meta_options( $items_array ){
 			'field_title' 	=> __( '"Read More" Text for Excerpt\'s', 'mp_stacks_postgrid'),
 			'field_description' 	=> __( 'What should the "Read More" text be at the end of the Excerpt? Default: "Read More". Leave blank for no output.', 'mp_stacks_postgrid' ),
 			'field_type' 	=> 'textbox',
-			'field_value' => __( 'Read More', 'mp_stacks_postgrid' ),
+			'field_value' => __( '[Read More]', 'mp_stacks_postgrid' ),
 			'field_showhider' => 'postgrid_excerpt_settings',
 		),
 		//Excerpt Background
@@ -212,7 +212,7 @@ function mp_stacks_postgrid_excerpt_meta_options( $items_array ){
 	return mp_core_insert_meta_fields( $items_array, $new_fields, 'postgrid_meta_hook_anchor_2' );
 
 }
-add_filter( 'mp_stacks_postgrid_items_array', 'mp_stacks_postgrid_excerpt_meta_options', 90 );
+add_filter( 'mp_stacks_postgrid_items_array', 'mp_stacks_postgrid_excerpt_meta_options', 11 );
 
 /**
  * Add the placement options for the Excerpt using placement options filter hook
@@ -235,7 +235,7 @@ function mp_stacks_postgrid_excerpt_placement_options( $placement_options, $post
 	$placement_options['word_limit'] = mp_core_get_post_meta($post_id, 'postgrid_excerpt_word_limit', 20);
 	
 	//Get Read More Text for excerpts
-	$placement_options['read_more_text'] = mp_core_get_post_meta($post_id, 'postgrid_excerpt_read_more_text' );
+	$placement_options['read_more_text'] = mp_core_get_post_meta($post_id, 'postgrid_excerpt_read_more_text', __( '[Read More]', 'mp_stacks_postgrid' ) );
 	
 	return $placement_options;	
 }
@@ -279,7 +279,6 @@ function mp_stacks_postgrid_excerpt( $post_id, $word_limit, $read_more_text = NU
 	) );
 	
 	return $postgrid_output;	
-
 	
 }
 
@@ -378,17 +377,23 @@ add_filter( 'mp_stacks_postgrid_below', 'mp_stacks_postgrid_excerpt_below_over_c
  *
  * @access   public
  * @since    1.0.0
- * @param    $postgrid_output String - The output for postgrid up until this point.
- * @return   $postgrid_output String - The incoming HTML with the new JS animation for the excerpt appended.
+ * @param    $existing_filter_output String - Any output already returned to this filter previously
+ * @param    $post_id String - the ID of the Brick where all the meta is saved.
+ * @param    $meta_prefix String - the prefix to put before each meta_field key to differentiate it from other plugins. :EG "postgrid"
+ * @return   $new_grid_output - the existing grid output with additional thigns added by this function.
  */
-function mp_stacks_postgrid_excerpt_animation_js( $postgrid_output, $post_id ){
+function mp_stacks_postgrid_excerpt_animation_js( $existing_filter_output, $post_id, $meta_prefix ){
 	
+	if ( $meta_prefix != 'postgrid' ){
+		return $existing_filter_output;	
+	}
+		
 	//Get JS output to animate the excerpts on mouse over and out
 	$excerpt_animation_js = mp_core_js_mouse_over_animate_child( '#mp-brick-' . $post_id . ' .mp-stacks-grid-item', '.mp-stacks-postgrid-item-excerpt-holder', mp_core_get_post_meta( $post_id, 'postgrid_excerpt_animation_keyframes', array() ) ); 
 
-	return $postgrid_output . $excerpt_animation_js;
+	return $existing_filter_output .= $excerpt_animation_js;
 }
-add_filter( 'mp_stacks_postgrid_animation_js', 'mp_stacks_postgrid_excerpt_animation_js', 10, 2 );
+add_filter( 'mp_stacks_grid_js', 'mp_stacks_postgrid_excerpt_animation_js', 10, 3 );
 		
 /**
  * Add the CSS for the excerpt to PostGrid's CSS

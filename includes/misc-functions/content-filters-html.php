@@ -7,7 +7,7 @@
  * @package    MP Stacks PostGrid
  * @subpackage Functions
  *
- * @copyright  Copyright (c) 2014, Mint Plugins
+ * @copyright  Copyright (c) 2015, Mint Plugins
  * @license    http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @author     Philip Johnston
  */
@@ -134,7 +134,7 @@ function mp_stacks_postgrid_output( $post_id, $post_offset = NULL ){
 			//If we should show related posts
 			if ( $postgrid_taxonomy_term['taxonomy_term'] == 'related_posts' ){
 				
-				$tags = wp_get_post_terms( $queried_object_id, 'post_tag' );
+				$tags = wp_get_post_terms( $queried_object_id, apply_filters( 'mp_stacks_postgrid_related_posts_tax_slug', 'post_tag', $post_id ) );
 				
 				if ( is_object( $tags ) ){
 					$tags_array = $tags;
@@ -143,11 +143,11 @@ function mp_stacks_postgrid_output( $post_id, $post_offset = NULL ){
 					$tags_array = isset( $tags[0] ) ? $tags[0] : NULL;
 				}
 				
-				$tag_slugs = wp_get_post_terms( $queried_object_id, 'post_tag', array("fields" => "slugs") );
+				$tag_slugs = wp_get_post_terms( $queried_object_id, apply_filters( 'mp_stacks_postgrid_related_posts_tax_slug', 'post_tag', $post_id ), array("fields" => "slugs") );
 				
 				//Add the related tags as a tax_query to the WP_Query
 				$postgrid_args['tax_query'][] = array(
-					'taxonomy' => 'post_tag',
+					'taxonomy' => apply_filters( 'mp_stacks_postgrid_related_posts_tax_slug', 'post_tag', $post_id ),
 					'field'    => 'slug',
 					'terms'    => $tag_slugs,
 				);
@@ -157,7 +157,7 @@ function mp_stacks_postgrid_output( $post_id, $post_offset = NULL ){
 				
 				//Add this term to the tax_query
 				$postgrid_args['tax_query'][] = array(
-					'taxonomy' => 'category',
+					'taxonomy' => apply_filters( 'mp_stacks_postgrid_main_tax_slug', 'category', $post_id ),
 					'field'    => 'id',
 					'terms'    => $postgrid_taxonomy_term['taxonomy_term'],
 					'operator' => 'IN'
@@ -228,58 +228,25 @@ function mp_stacks_postgrid_output( $post_id, $post_offset = NULL ){
 	
 	//Get the options for the grid placement - we pass this to the action filters for text placement
 	$grid_placement_options = apply_filters( 'mp_stacks_postgrid_placement_options', NULL, $post_id );
-	
+		
 	//Get the JS for animating items - only needed the first time we run this - not on subsequent Ajax requests.
 	if ( !defined('DOING_AJAX') ){
-					
-		//Check if we should apply Masonry to this grid
-		$postgrid_masonry = mp_core_get_post_meta( $post_id, 'postgrid_masonry' );
 		
-		//If we should apply Masonry to this grid
-		if ( $postgrid_masonry ){
-			 
-			//Add Masonry JS 
-			$postgrid_output .= '<script type="text/javascript">
-				jQuery(document).ready(function($){ 
-					//Activate Masonry for Grid Items
-					$( "#mp-brick-' . $post_id . ' .mp-stacks-grid" ).imagesLoaded(function(){
-						$( "#mp-brick-' . $post_id . ' .mp-stacks-grid" ).masonry();
-					});	
-				});
-				var masonry_grid_' . $post_id . ' = true;
-				</script>';
-		}
-		else{
-			
-			//Set Masonry Variable to False so we know not to refresh masonry upon ajax
-			$postgrid_output .= '<script type="text/javascript">
-				var masonry_grid_' . $post_id . ' = false;
-			</script>';	
-		}
-		
-		//Filter Hook which can be used to apply javascript output for items in this grid
-		$postgrid_output .= apply_filters( 'mp_stacks_postgrid_animation_js', $postgrid_output, $post_id );
-		
-		//Get JS output to animate the images on mouse over and out
-		$postgrid_output .= mp_core_js_mouse_over_animate_child( '#mp-brick-' . $post_id . ' .mp-stacks-grid-item', '.mp-stacks-grid-item-image', mp_core_get_post_meta( $post_id, 'postgrid_image_animation_keyframes', array() ) ); 
-		
-		//Get JS output to animate the images overlays on mouse over and out
-		$postgrid_output .= mp_core_js_mouse_over_animate_child( '#mp-brick-' . $post_id . ' .mp-stacks-grid-item', '.mp-stacks-grid-item-image-overlay',mp_core_get_post_meta( $post_id, 'postgrid_image_overlay_animation_keyframes', array() ) ); 
-		
-		//Get JS output to animate the background on mouse over and out
-		$postgrid_output .= mp_core_js_mouse_over_animate_child( '#mp-brick-' . $post_id . ' .mp-stacks-grid-item', '.mp-stacks-grid-item-inner',mp_core_get_post_meta( $post_id, 'postgrid_bg_animation_keyframes', array() ) ); 
-		
+		//Here we set javascript for this grid
+		$postgrid_output .= apply_filters( 'mp_stacks_grid_js', NULL, $post_id, 'postgrid' );
+							
 	}
 	
+	//Add HTML that sits before the "grid" div
+	$postgrid_output .= !defined('DOING_AJAX') ? apply_filters( 'mp_stacks_grid_before', NULL, $post_id, 'postgrid', $postgrid_taxonomy_terms ) : NULL; 
+		
 	//Get Download Output
-	$postgrid_output .= !defined('DOING_AJAX') ? '<div class="mp-stacks-grid">' : NULL;
+	$postgrid_output .= !defined('DOING_AJAX') ? '<div class="mp-stacks-grid ' . apply_filters( 'mp_stacks_grid_classes', NULL, $post_id, 'postgrid' ) . '">' : NULL;
 		
 	//Create new query for stacks
 	$postgrid_query = new WP_Query( apply_filters( 'postgrid_args', $postgrid_args ) );
 	
 	$total_posts = $postgrid_query->found_posts;
-	
-	$css_output = NULL;
 	
 	//Loop through the stack group		
 	if ( $postgrid_query->have_posts() ) { 
@@ -287,71 +254,62 @@ function mp_stacks_postgrid_output( $post_id, $post_offset = NULL ){
 		while( $postgrid_query->have_posts() ) : $postgrid_query->the_post(); 
 				
 				$grid_post_id = get_the_ID();
-				
+								
 				//Reset Grid Classes String
-				$grid_item_classes = NULL;
-				$grid_item_inner_bg_color_style_tag = NULL;
+				$source_counter = 0;
+				$post_source_num = NULL;
 				$grid_item_inner_bg_color = NULL;
 				
 				//If there are multiple tax terms selected to show
 				if ( is_array( $postgrid_taxonomy_terms ) && !empty( $postgrid_taxonomy_terms[0]['taxonomy_term'] ) ){
 					
-					//Loop through each term the user added to this postgrid
+					//Loop through each "repeat" source the user added to this postgrid
 					foreach( $postgrid_taxonomy_terms as $postgrid_taxonomy_term ){
-						
+												
 						//If we should show related posts
 						if ( $postgrid_taxonomy_term['taxonomy_term'] == 'related_posts' ){
 							
-							//Add the tags to the classes for the grid item
-							$tags = wp_get_post_terms( $queried_object_id, 'post_tag' );
-				
-							if ( is_object( $tags ) ){
-								$tags_array = $tags;
-							}
-							elseif (is_array( $tags ) ){
-								$tags_array = isset( $tags[0] ) ? $tags[0] : NULL;
-							}
-							
-							$tag_slugs = wp_get_post_terms( $queried_object_id, 'post_tag', array("fields" => "slugs") );
-							
-							if ( is_array( $tag_slugs ) ){
-								
-								foreach( $tag_slugs as $tag_slug ){
-									
-									$grid_item_classes .= ' ' . $tag_slug . ' ';
-							
-								}
-							}
-							
+							//Store the source this post belongs to
+							$post_source_num = $source_counter;
+														
 							//Add the bg color for this post
 							if ( !empty( $postgrid_taxonomy_term['taxonomy_bg_color'] ) ){
-								$grid_item_inner_bg_color_style_tag = '<style type="text/css" scoped>#mp-brick-' . $post_id . ' .mp-stacks-grid-item-' . $grid_post_id . ' .mp-stacks-grid-item-inner{ background-color:' . $postgrid_taxonomy_term['taxonomy_bg_color'] . ';</style>';
 								$grid_item_inner_bg_color = $postgrid_taxonomy_term['taxonomy_bg_color'];
 							}
 						}
-						//If the current post has this term, make that term one of the classes for the grid item
+						//If the current post (in this loop through the source repeats) has the term applied to this repeat
 						else if ( has_term( $postgrid_taxonomy_term['taxonomy_term'], 'category', $grid_post_id ) ){
 							
-							//Add the term slug to the grid item classes
-							$term_slug = get_term_by( 'id', $postgrid_taxonomy_term['taxonomy_term'], 'category' );
-							$grid_item_classes .= ' ' . $term_slug->slug . ' ';
-							
+							//Store the source this post belongs to
+							$post_source_num = $source_counter;
+														
 							//Set the bg color for this post
 							if ( !empty( $postgrid_taxonomy_term['taxonomy_bg_color'] ) ){
-								$grid_item_inner_bg_color_style_tag = '<style type="text/css" scoped>#mp-brick-' . $post_id . ' .mp-stacks-grid-item-' . $grid_post_id . ' .mp-stacks-grid-item-inner{ background-color:' . $postgrid_taxonomy_term['taxonomy_bg_color'] . ';</style>';
 								$grid_item_inner_bg_color = $postgrid_taxonomy_term['taxonomy_bg_color'];
 							}
 							
 						}
+						
+						$source_counter = $source_counter + 1;
 						
 					}
 				}
 				
-				$postgrid_output .= '<div class="mp-stacks-grid-item mp-stacks-grid-item-' . $grid_post_id . $grid_item_classes . '">';
-					$postgrid_output .= '<div class="mp-stacks-grid-item-inner" ' . (!empty( $grid_item_inner_bg_color ) ? 'mp-default-bg-color="' . $grid_item_inner_bg_color . '"' : NULL) . '>';
-						//Css style tag which applies the user-chosen background color to this post.
-						$postgrid_output .= $grid_item_inner_bg_color_style_tag;
+				//Add our custom classes to the grid-item 
+				$class_string = 'mp-stacks-grid-source-' . $post_source_num . ' mp-stacks-grid-item mp-stacks-grid-item-' . $grid_post_id . ' ';
+				//Add all posts that would be added from the post_class wp function as well
+				$class_string = join( ' ', get_post_class( $class_string, $grid_post_id ) );
+				$class_string = apply_filters( 'mp_stacks_grid_item_classes', $class_string, $post_id, 'postgrid' ); 
+								
+				//Get the Grid Item Attributes
+				$grid_item_attribute_string = apply_filters( 'mp_stacks_grid_attribute_string', NULL, $postgrid_taxonomy_terms, $grid_post_id, $post_id, 'postgrid', $post_source_num );
+								
+				$postgrid_output .= '<div class="' . $class_string . '" ' . $grid_item_attribute_string . '>';
+					$postgrid_output .= '<div class="mp-stacks-grid-item-inner" ' . (!empty( $grid_item_inner_bg_color ) ? 'mp-default-bg-color="' . $grid_item_inner_bg_color . '"' : NULL) . '>';					
 					
+					//Add htmloutput directly inside this grid item
+					$postgrid_output .= apply_filters( 'mp_stacks_grid_inside_grid_item_top', NULL, $postgrid_taxonomy_terms, $post_id, 'postgrid', $grid_post_id, $post_source_num );
+															
 					//Microformats
 					$postgrid_output .= '
 					<article class="microformats hentry" style="display:none;">
@@ -435,13 +393,18 @@ function mp_stacks_postgrid_output( $post_id, $post_offset = NULL ){
 						
 					}
 					
-					//Below Image Area Container:
-					$postgrid_output .= '<div class="mp-stacks-grid-item-below-image-holder">';
-					
-						//Filter Hook to output HTML into the "Below" position on the featured Image
-						$postgrid_output .= apply_filters( 'mp_stacks_postgrid_below', NULL, $grid_post_id, $grid_placement_options );
+					//Filter Hook to output HTML into the "Below" position on the featured Image
+					$postgrid_below = apply_filters( 'mp_stacks_postgrid_below', NULL, $grid_post_id, $grid_placement_options );
 						
-					$postgrid_output .= '</div>';
+					if ( !empty( $postgrid_below ) ){
+						//Below Image Area Container:
+						$postgrid_output .= '<div class="mp-stacks-grid-item-below-image-holder">';
+						
+							//Filter Hook to output HTML into the "Below" position on the featured Image
+							$postgrid_output .= $postgrid_below;
+							
+						$postgrid_output .= '</div>';
+					}
 				
 				$postgrid_output .= '</div></div>';
 								
