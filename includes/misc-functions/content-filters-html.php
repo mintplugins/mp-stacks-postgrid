@@ -220,7 +220,7 @@ function mp_stacks_postgrid_output( $post_id, $post_offset = NULL ){
 	}
 	
 	//Show Download Images?
-	$postgrid_featured_images_show = mp_core_get_post_meta($post_id, 'postgrid_featured_images_show');
+	$postgrid_featured_images_show = mp_core_get_post_meta_checkbox($post_id, 'postgrid_featured_images_show', true);
 	
 	//Download Image width and height
 	$postgrid_featured_images_width = mp_core_get_post_meta( $post_id, 'postgrid_featured_images_width', '300' );

@@ -241,7 +241,7 @@ function mp_stacks_postgrid_create_meta_box(){
 			'field_title' 	=> __( 'Show Featured Images?', 'mp_stacks_postgrid'),
 			'field_description' 	=> __( 'Do you want to show the featured images for these posts?', 'mp_stacks_postgrid' ),
 			'field_type' 	=> 'checkbox',
-			'field_value' => 'postgrid_show_featured_images',
+			'field_value' => 'postgrid_featured_images_show',
 			'field_showhider' => 'postgrid_featured_images_settings',
 		),
 		'postgrid_feat_img_note' => array(
