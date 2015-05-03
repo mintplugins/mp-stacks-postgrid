@@ -8,7 +8,7 @@
  * @package    MP Core
  * @subpackage Classes
  *
- * @copyright  Copyright (c) 2015, Mint Plugins
+ * @copyright  Copyright (c) 2014, Mint Plugins
  * @license    http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @author     Philip Johnston
  */
@@ -178,7 +178,9 @@ if ( !class_exists( 'MP_CORE_Plugin_Installer' ) ){
 					'api' => 'true',
 					'slug' => $this->plugin_name_slug,
 					'author' => NULL, //$this->_args['software_version'] - not working for some reason
-					'license_key' => $this->_args['plugin_license']
+					'license_key' => $this->_args['plugin_license'],
+					'old_license_key' => get_option( $this->plugin_name_slug . '_license_key' ),
+					'site_activating' => get_bloginfo( 'wpurl' )
 				);
 								
 				$request = wp_remote_post( $this->_args['plugin_api_url']  . '/repo/' . $this->plugin_name_slug, array( 'method' => 'POST', 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );				
@@ -250,7 +252,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Installer' ) ){
 			if( ini_get('allow_url_fopen') ) {
 					
 				//Download the plugin file defined in the passed in array
-				$saved_file = $wp_filesystem->get_contents( $this->_args['plugin_download_link'] );
+				$saved_file = $wp_filesystem->get_contents( esc_url_raw( add_query_arg( array( 'site_activating' => get_bloginfo( 'wpurl' ) ), $this->_args['plugin_download_link'] ) ) );
 			
 				//Save the contents into a temp.zip file (string stored in $filename)
 				$wp_filesystem->put_contents( $filename, $saved_file, FS_CHMOD_FILE);
