@@ -83,8 +83,8 @@ function mp_stacks_postgrid_output( $post_id, $post_offset = NULL ){
 	global $wp_query;
 	
 	//Start up the PHP session if there isn't one already
-	if( !session_id() ){
-		session_start();
+	if ( session_id() === "" ) {
+	   session_start();
 	}
 	
 	//If we are NOT doing ajax get the parent's post id from the wp_query.
