@@ -4,7 +4,7 @@ Donate link: http://mintplugins.com/
 Tags: message bar, header
 Requires at least: 3.5
 Tested up to: 4.1
-Stable tag: 1.0.1.0
+Stable tag: 1.0.1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -32,6 +32,10 @@ See full instructions at http://mintplugins.com/doc/mp-stacks
 
 
 == Changelog ==
+
+= 1.0.1.1 = May 3, 2015
+* Changed session_start check to be strict.
+* Updated plugin installer in-sync with latest in mp_core
 
 = 1.0.1.0 = April 29, 2015
 * Set a proper default for the 'postgrid_featured_images_show' option and used mp_core_get_post_meta_checkbox for displaying.
