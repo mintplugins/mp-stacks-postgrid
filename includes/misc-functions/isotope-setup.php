@@ -91,6 +91,8 @@ function mp_stacks_postgrid_isotope_filter_groups(){
 		),
 	);
 	
+	$isotope_filter_groups = apply_filters( 'mp_stacks_postgrid_isotope_filter_groups', $isotope_filter_groups );
+	
 	return $isotope_filter_groups;
 	
 }
