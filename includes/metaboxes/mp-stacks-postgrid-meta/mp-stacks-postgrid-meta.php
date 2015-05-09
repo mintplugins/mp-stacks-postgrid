@@ -217,14 +217,6 @@ function mp_stacks_postgrid_create_meta_box(){
 				'field_repeater' => 'postgrid_bg_animation_keyframes',
 				'field_showhider' => 'postgrid_bg_settings',
 			),
-		'postgrid_masonry' => array(
-			'field_id'			=> 'postgrid_masonry',
-			'field_title' 	=> __( 'Use Masonry?', 'mp_stacks_postgrid'),
-			'field_description' 	=> __( 'Would you like to use Masonry for the layout? Masonry is similar to how Pinterest posts are laid out.', 'mp_stacks_postgrid' ),
-			'field_type' 	=> 'checkbox',
-			'field_value' => 'postgrid_masonry',
-			'field_showhider' => 'postgrid_layout_settings',
-		),
 		
 		//Use this to add new options at this point with the filter hook
 		'postgrid_meta_hook_anchor_1' => array( 'field_type' => 'hook_anchor'),
