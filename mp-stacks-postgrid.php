@@ -3,7 +3,7 @@
 Plugin Name: MP Stacks + PostGrid
 Plugin URI: http://mintplugins.com
 Description: Displays posts from Easy Digital Downloads categories in a grid in a Brick
-Version: 1.0.1.1
+Version: 1.0.1.2
 Author: Mint Plugins
 Author URI: http://mintplugins.com
 Text Domain: mp_stacks_postgrid
@@ -34,7 +34,7 @@ License: GPL2
 */
 // Plugin version
 if( !defined( 'MP_STACKS_POSTGRID_VERSION' ) )
-	define( 'MP_STACKS_POSTGRID_VERSION', '1.0.1.1' );
+	define( 'MP_STACKS_POSTGRID_VERSION', '1.0.1.2' );
 
 // Plugin Folder URL
 if( !defined( 'MP_STACKS_POSTGRID_PLUGIN_URL' ) )
