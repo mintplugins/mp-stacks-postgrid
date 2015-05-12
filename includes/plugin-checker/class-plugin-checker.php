@@ -8,7 +8,7 @@
  * @package    MP Core
  * @subpackage Classes
  *
- * @copyright  Copyright (c) 2015, Mint Plugins
+ * @copyright  Copyright (c) 2014, Mint Plugins
  * @license    http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @author     Philip Johnston
  */
@@ -81,7 +81,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Checker' ) ){
 				$this->_args[$key] = wp_parse_args( $args[$key], $defaults[$key] );
 				
 			}
-			
+					
 			//Make sure we are not on the "plugin-install.php" page because there is a conflict with the plugins_api on this page		
 			if ( stripos( basename( $_SERVER['PHP_SELF'] ), 'plugin-install.php' ) === false ){
 				//Set up install page/pages
@@ -118,7 +118,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Checker' ) ){
 	 	 * @return   void
 		 */
 		public function mp_core_create_pages(){
-			
+									
 			//Loop through each plugin that is supposed to be installed
 			foreach ( $this->_args as $plugin_key => $plugin ){
 				
@@ -210,18 +210,62 @@ if ( !class_exists( 'MP_CORE_Plugin_Checker' ) ){
 			
 			screen_icon();
 						
-			echo '<h2>' . __('Install Items', 'mp_core') . '</h2>';
+			echo '<h2>' . __('Installing Required Items.', 'mp_core') . '</h2>';
 						
 			//Check plugins and store needed ones in $plugins
 			$plugins = $this->mp_core_check_plugins( $this->_args, false );
+			
+			//If there are no plugins to show, return false.
+			if ( empty( $plugins ) ){
+				return false;	
+			}
+			
+			//Install_loop_counter
+			$install_loop_counter = 0;
 						
 			//Loop through each plugin that is supposed to be installed
 			foreach ( $plugins as $plugin_key => $plugin ){
+				
+				$install_loop_counter = $install_loop_counter + 1;
+								
+				//If we have installed 3 plugins
+				if ( $install_loop_counter >= 4 ){
+					
+					//Refresh the page so we don't crash anybody's servers with too much in one request. (This hasn't happened yet so for now we'll leave it).				
+					/*echo '
+					<script type="text/javascript">
+						document.location.reload(true);
+					</script>';
+					
+					exit;*/
+												
+				}
 				
 				//If this plugin requires a license to be installed
 				if ( $plugin['plugin_licensed'] ){
 									
 					$plugin_name_slug = sanitize_title ( $plugin['plugin_name'] );
+					
+					//Listen for our Submit License button to be clicked
+					if( isset( $_POST[ $plugin_name_slug . '_license_key' ] ) ) {
+										
+						//If it has, store it in the license_key variable 
+						$license_key = $_POST[ $plugin_name_slug . '_license_key' ];
+						
+						//Check nonce
+						if( ! check_admin_referer( $plugin_name_slug . '_nonce', $plugin_name_slug . '_nonce' ) ) 	
+							return false; // get out if we didn't click the Activate button
+							
+						$args = array(
+							'software_name'      => $plugin['plugin_name'],
+							'software_api_url'   => $plugin['plugin_api_url'],
+							'software_license_key'   => $license_key, //EG move-plugins-core_license_key
+							'software_store_license' => true, //Store this newly submitted license
+						);
+									
+						mp_core_verify_license( $args );
+						
+					}
 					
 					//If this plugin could use a different/parent plugin's license (this is likely an add-on plugin).
 					//If this passes, it just means the user doesn't have to enter the same license again
@@ -231,6 +275,9 @@ if ( !class_exists( 'MP_CORE_Plugin_Checker' ) ){
 						
 						//Get the previously saved license for the parent plugin from the database
 						$license_key = get_option( $parent_plugin_name_slug . '_license_key' );
+						
+						//If there's no parent license key entered, see if there's one entered for this plugin
+						$license_key = empty( $license_key ) ? get_option( $plugin_name_slug . '_license_key' ) : $license_key;
 						
 						$verify_license_args = array(
 							'software_name'      => $plugin['plugin_name'],
@@ -255,8 +302,16 @@ if ( !class_exists( 'MP_CORE_Plugin_Checker' ) ){
 							
 							<div id="<?php echo $plugin_name_slug; ?>-plugin-license-wrap" class="wrap mp-core-plugin-license-wrap">
 								
-								<p class="plugin-description"><?php echo __( "You need a license for ", 'mp_core' ) . $plugin['plugin_name']; ?></p>
-								
+                                <?php 
+								//If there is nothing entered for the license key, tell the user they need one.
+								if ( empty( $license_key ) ){ ?>
+									<p class="plugin-description"><?php echo __( "You need a license for ", 'mp_core' ) . $plugin['plugin_name']; ?></p><?php 
+								} 
+								//If there is a license key entered, let the user know it is invalid
+								else{?>
+									<p class="plugin-description"><?php echo __( "The license key is invalid for ", 'mp_core' ) . $plugin['plugin_name']; ?></p><?php 
+								}?>
+                                
 								<form method="post">
 													
 									<input style="float:left; margin-right:10px;" id="<?php echo $plugin_name_slug; ?>_license_key" name="<?php echo $plugin_name_slug; ?>_license_key" type="text" class="regular-text" value="<?php esc_attr_e( $license_key ); ?>" />						
@@ -471,7 +526,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Checker' ) ){
 					foreach( $installed_themes as $theme_slug => $theme ){
 					
 						//If this theme is not the theme we're hoping to install
-						if ( $theme['headers:WP_Theme:private']['Name'] != $plugin['plugin_name'] ){
+						if ( $theme[0] != $plugin['plugin_name'] ){
 							
 							//For now, set this theme to be listed as not installed
 							$theme_installed = false;
@@ -482,6 +537,25 @@ if ( !class_exists( 'MP_CORE_Plugin_Checker' ) ){
 							
 							//This theme is installed
 							$theme_installed = true;
+							
+							$current_theme = wp_get_theme();
+							$current_theme_name = $current_theme->get( 'Name' );
+							
+							//If the currently active theme is not the one we require here
+							if ( $plugin['plugin_name'] != $current_theme_name  ){
+								
+								//Output a notice that the theme needs to be activated
+								echo '<div class="updated fade"><p>';
+										
+									echo $plugin['plugin_message'] . '</p>';		
+																		
+									//Activate Theme
+									echo '<a href="' . wp_nonce_url('themes.php?action=activate&stylesheet=' . $theme_slug, 'switch-theme_' . $theme_slug ) . '" title="' . esc_attr__('Activate this theme') . '" class="button">' . __('Activate', 'mp_core') . ' "' . $plugin['plugin_name'] . '"</a>'; 
+									//Dismiss button
+									$this->mp_core_dismiss_button( $plugin );
+								
+								echo '</p></div>';
+							}
 							
 							//Stop looping
 							break;

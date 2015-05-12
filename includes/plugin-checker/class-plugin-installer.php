@@ -8,7 +8,7 @@
  * @package    MP Core
  * @subpackage Classes
  *
- * @copyright  Copyright (c) 2014, Mint Plugins
+ * @copyright  Copyright (c) 2015, Mint Plugins
  * @license    http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @author     Philip Johnston
  */
@@ -253,23 +253,50 @@ if ( !class_exists( 'MP_CORE_Plugin_Installer' ) ){
 					
 				//Download the plugin file defined in the passed in array
 				$saved_file = $wp_filesystem->get_contents( esc_url_raw( add_query_arg( array( 'site_activating' => get_bloginfo( 'wpurl' ) ), $this->_args['plugin_download_link'] ) ) );
-			
+							
 				//Save the contents into a temp.zip file (string stored in $filename)
 				$wp_filesystem->put_contents( $filename, $saved_file, FS_CHMOD_FILE);
 				
 			}
-			//For people with poor/bad server configurations which don't have access to allow_url_fopen, activate the "MP Curl Plugin Installer" Plugin to hook here
+			//For people with poor/bad server configurations which don't have access to allow_url_fopen, try using curl with an error message.
 			else{
 				
-				//Set args for CURL hook			
-				$curl_args = array(
-					'plugin_download_link' => $this->_args['plugin_download_link'],
-					'upload_dir' => $upload_dir
-				);
+				echo __( 'Oops! Your Web Host is badly configured! Let your web host know they need to have "allow_url_fopen" turned on.', 'mp_core' );
+								
+				// Initializing curl
+				$ch = curl_init();
+				 
+				//Return Transfer
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 				
-				//Hook to use CURL for people with poor/bad server configurations. Activate the "MP Curl Plugin Checker" Plugin to hook here
-				do_action( 'mp_core_curl_plugin_installer', $curl_args );					
+				//File to fetch
+				curl_setopt($ch, CURLOPT_URL, $this->_args['plugin_download_link']);
 				
+				//Open/Create new file
+				$file = fopen($upload_dir . "temp.zip", 'w');
+				
+				//Put contents of plugin_download_link in this new file
+				curl_setopt($ch, CURLOPT_FILE, $file ); #output
+				
+				curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);// allow redirects
+				
+				//Set User Agent
+				curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5'); //set user agent
+										 
+				// Getting results
+				$result =  curl_exec($ch); // Getting jSON result string
+				
+				curl_close($ch);
+				
+				fclose($file);
+									
+				//If we are unable to find the file, let the user know. This will also fail if a license is incorrect - but it should be caught further up the page
+				if ( ! $result ) {
+					
+					die();
+									
+				}
+							
 			}
 			
 			//Unzip the temp zip file
@@ -277,10 +304,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Installer' ) ){
 						
 			//Delete the temp zipped file
 			$wp_filesystem->rmdir($filename);
-							
-			//Display a successfully installed message
-			echo '<p>' . __( 'Successfully Installed ', 'mp_core' ) .  $this->_args['plugin_name']  . '</p>';
-					
+												
 			//If we are installing a theme
 			if ( $this->_args['plugin_is_theme'] ){
 				
@@ -307,6 +331,9 @@ if ( !class_exists( 'MP_CORE_Plugin_Installer' ) ){
 					}
 					
 				}
+				
+				//Display a successfully installed message
+				echo '<p>' . __( 'Successfully Installed ', 'mp_core' ) .  $this->_args['plugin_name']  . '</p>';
 					
 			}
 			//If we are installing a plugin
@@ -316,7 +343,19 @@ if ( !class_exists( 'MP_CORE_Plugin_Installer' ) ){
 				wp_cache_set( 'plugins', NULL, 'plugins' );
 			
 				//Activate plugin
-				print_r ( activate_plugin( trailingslashit( $upload_dir ) . $this->plugin_name_slug . '/' . $this->_args['plugin_filename'] ) );
+				$result = activate_plugin( trailingslashit( $upload_dir ) . $this->plugin_name_slug . '/' . $this->_args['plugin_filename'] );
+				
+				//If there was a problem installing the plugin
+				if ( is_wp_error( $result ) ) {
+					//Display an error message
+					echo '<p>' . __( 'Error Installing ', 'mp_core' ) .  $this->_args['plugin_name']  . '</p>';
+					echo '<p>' . $result->get_error_message() . '</p>';
+				}
+				//If we activated the plugin and it's all good
+				else{
+					//Display a successfully installed message
+					echo '<p>' . __( 'Successfully Installed ', 'mp_core' ) .  $this->_args['plugin_name']  . '</p>';
+				}
 			}
 		
 			if ( !empty( $this->_args['plugin_success_link'] ) ){
