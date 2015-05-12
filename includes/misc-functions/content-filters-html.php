@@ -124,6 +124,26 @@ function mp_stacks_postgrid_output( $post_id, $post_offset = NULL ){
 			'relation' => 'OR',
 		)
 	);	
+	
+	$orderby = mp_stacks_grid_order_by( $post_id, 'postgrid' );
+	
+	//Set the order by options for the wp query
+	switch ( $orderby ) {
+		case 'date_newest_to_oldest':
+			$postgrid_args['orderby'] = 'date';
+			$postgrid_args['order'] = 'DESC';
+			break;
+		case 'date_oldest_to_newest':
+			$postgrid_args['orderby'] = 'date';
+			$postgrid_args['order'] = 'ASC';
+			break;
+		case 'most_comments':
+			$postgrid_args['orderby'] = 'comment_count';
+			break;
+		case 'random':
+			$postgrid_args['orderby'] = 'rand';
+			break;
+	}
 		
 	//If there are tax terms selected to show (the "new" way with multiple terms)
 	if ( is_array( $postgrid_taxonomy_terms ) && !empty( $postgrid_taxonomy_terms[0]['taxonomy_term'] ) ){
