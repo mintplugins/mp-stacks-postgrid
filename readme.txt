@@ -4,7 +4,7 @@ Donate link: http://mintplugins.com/
 Tags: message bar, header
 Requires at least: 3.5
 Tested up to: 4.1
-Stable tag: 1.0.1.2
+Stable tag: 1.0.1.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -32,6 +32,9 @@ See full instructions at http://mintplugins.com/doc/mp-stacks
 
 
 == Changelog ==
+
+= 1.0.1.3 = May 12, 2015
+* Added orderby options.
 
 = 1.0.1.2 = May 9, 2015
 * Added filter to allow more isotope taxonomies
