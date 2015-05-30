@@ -83,7 +83,7 @@ function mp_stacks_postgrid_output( $post_id, $post_offset = NULL ){
 	global $wp_query;
 	
 	//Start up the PHP session if there isn't one already
-	if ( session_id() === "" ) {
+	if ( !isset( $_SESSION ) ) {
 	   session_start();
 	}
 	
@@ -347,7 +347,7 @@ function mp_stacks_postgrid_output( $post_id, $post_offset = NULL ){
 						
 							$postgrid_output .= '<div class="mp-stacks-grid-item-image-overlay"></div>';
 							
-							$postgrid_output .= '<a href="' . get_permalink() . '" class="mp-stacks-grid-image-link">';
+							$postgrid_output .= '<a href="' . apply_filters( 'mp_stacks_postgrid_grid_post_permalink', get_permalink(), $grid_post_id ) . '" class="mp-stacks-grid-image-link">';
 							
 							//Get the featured image and crop according to the user's specs
 							if ( $postgrid_featured_images_height > 0 && !empty( $postgrid_featured_images_height ) ){
