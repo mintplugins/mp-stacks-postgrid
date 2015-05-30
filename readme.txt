@@ -4,7 +4,7 @@ Donate link: http://mintplugins.com/
 Tags: message bar, header
 Requires at least: 3.5
 Tested up to: 4.1
-Stable tag: 1.0.1.3
+Stable tag: 1.0.1.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -32,6 +32,11 @@ See full instructions at http://mintplugins.com/doc/mp-stacks
 
 
 == Changelog ==
+
+= 1.0.1.4 = May 30, 2015
+* Make postgrid css Add to any existing css filtered to mp_brick_additional_css - previousl to this release it overwrote any incoming CSS.
+* Changed the way we check if the PHP session exists by seeing is isset( $_SESSION ). Older versions of PHP seemed to have trouble with this.
+* Added filter for PostGrid grid items permalink called "mp_stacks_postgrid_grid_post_permalink".
 
 = 1.0.1.3 = May 12, 2015
 * Added orderby options.
