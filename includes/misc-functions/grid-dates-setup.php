@@ -318,7 +318,7 @@ function mp_stacks_postgrid_date_below_over_callback( $postgrid_output, $grid_po
 	//If we should show the date below the image
 	if ( strpos( $options['date_placement'], 'below') !== false && $options['date_show']){
 		
-		$date_html_output = '<a href="' . get_permalink() . '" class="mp-stacks-postgrid-date-link">';	
+		$date_html_output = '<a href="' . apply_filters( 'mp_stacks_postgrid_grid_post_permalink', get_permalink(), $grid_post_id ) . '" class="mp-stacks-postgrid-date-link">';	
 			$date_html_output .= mp_stacks_postgrid_date( $grid_post_id, $options['word_limit'], $options['read_more_text'] );
 		$date_html_output .= '</a>';
 		

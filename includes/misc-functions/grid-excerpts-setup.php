@@ -161,7 +161,7 @@ function mp_stacks_postgrid_excerpt_meta_options( $items_array ){
 		'postgrid_excerpt_read_more_text' => array(
 			'field_id'			=> 'postgrid_excerpt_read_more_text',
 			'field_title' 	=> __( '"Read More" Text for Excerpt\'s', 'mp_stacks_postgrid'),
-			'field_description' 	=> __( 'What should the "Read More" text be at the end of the Excerpt? Default: "Read More". Leave blank for no output.', 'mp_stacks_postgrid' ),
+			'field_description' 	=> __( 'What should the "Read More" text be at the end of the Excerpt? Default: "[Read More]". For no output type "*****" (5 asterisks).', 'mp_stacks_postgrid' ),
 			'field_type' 	=> 'textbox',
 			'field_value' => __( '[Read More]', 'mp_stacks_postgrid' ),
 			'field_showhider' => 'postgrid_excerpt_settings',
@@ -360,7 +360,7 @@ function mp_stacks_postgrid_excerpt_below_over_callback( $postgrid_output, $grid
 	//If we should show the excerpt below the image
 	if ( strpos( $options['excerpt_placement'], 'below') !== false && $options['excerpt_show']){
 		
-		$excerpt_html_output = '<a href="' . get_permalink() . '" class="mp-stacks-postgrid-excerpt-link">';	
+		$excerpt_html_output = '<a href="' . apply_filters( 'mp_stacks_postgrid_grid_post_permalink', get_permalink(), $grid_post_id ) . '" class="mp-stacks-postgrid-excerpt-link">';	
 			$excerpt_html_output .= mp_stacks_postgrid_excerpt( $grid_post_id, $options['word_limit'], $options['read_more_text'] );
 		$excerpt_html_output .= '</a>';
 		

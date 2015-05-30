@@ -347,6 +347,7 @@ function mp_stacks_postgrid_output( $post_id, $post_offset = NULL ){
 						
 							$postgrid_output .= '<div class="mp-stacks-grid-item-image-overlay"></div>';
 							
+							//Output the link for this postgrid post.
 							$postgrid_output .= '<a href="' . apply_filters( 'mp_stacks_postgrid_grid_post_permalink', get_permalink(), $grid_post_id ) . '" class="mp-stacks-grid-image-link">';
 							
 							//Get the featured image and crop according to the user's specs

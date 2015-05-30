@@ -315,7 +315,7 @@ function mp_stacks_postgrid_title_below_over_callback( $postgrid_output, $grid_p
 	//If we should show the title below the image
 	if ( strpos( $options['title_placement'], 'below') !== false && $options['title_show']){
 		
-		$title_html_output = '<a href="' . get_permalink() . '" class="mp-stacks-postgrid-title-link">';	
+		$title_html_output = '<a href="' . apply_filters( 'mp_stacks_postgrid_grid_post_permalink', get_permalink(), $grid_post_id ) . '" class="mp-stacks-postgrid-title-link">';	
 			$title_html_output .= mp_stacks_postgrid_title( $grid_post_id );
 		$title_html_output .= '</a>';
 		
