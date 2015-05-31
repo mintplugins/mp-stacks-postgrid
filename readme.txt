@@ -4,7 +4,7 @@ Donate link: http://mintplugins.com/
 Tags: message bar, header
 Requires at least: 3.5
 Tested up to: 4.1
-Stable tag: 1.0.1.4
+Stable tag: 1.0.1.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -32,6 +32,10 @@ See full instructions at http://mintplugins.com/doc/mp-stacks
 
 
 == Changelog ==
+
+= 1.0.1.5 = May 31, 2015
+* Added brick ID to permalink filter (mp_stacks_postgrid_grid_post_permalink) for context
+* Added filter for CSS Classes for postgrid links called (mp_stacks_postgrid_grid_postlink_classes). This allows them to do things like open in lightboxes using a custom filter. For more information on proper usage please visit: https://mintplugins.com/support/how-to-use-postgrid-for-other-post-types/
 
 = 1.0.1.4 = May 30, 2015
 * Make postgrid css Add to any existing css filtered to mp_brick_additional_css - previousl to this release it overwrote any incoming CSS.
