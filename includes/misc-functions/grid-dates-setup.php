@@ -313,12 +313,12 @@ add_filter( 'mp_stacks_postgrid_bottom_over', 'mp_stacks_postgrid_date_bottom_ov
  * @param    $grid_post_id Int - The ID of the post
  * @return   $html_output String - A string holding the html for text over a featured image in the grid
  */
-function mp_stacks_postgrid_date_below_over_callback( $postgrid_output, $grid_post_id, $options ){
+function mp_stacks_postgrid_date_below_over_callback( $postgrid_output, $grid_post_id, $brick_id, $options ){
 	
 	//If we should show the date below the image
 	if ( strpos( $options['date_placement'], 'below') !== false && $options['date_show']){
 		
-		$date_html_output = '<a href="' . apply_filters( 'mp_stacks_postgrid_grid_post_permalink', get_permalink(), $grid_post_id ) . '" class="mp-stacks-postgrid-date-link">';	
+		$date_html_output = '<a href="' . apply_filters( 'mp_stacks_postgrid_grid_post_permalink', get_permalink(), $grid_post_id, $brick_id ) . '" class="mp-stacks-postgrid-date-link ' . apply_filters( 'mp_stacks_postgrid_grid_postlink_classes', NULL, $grid_post_id ) . '">';	
 			$date_html_output .= mp_stacks_postgrid_date( $grid_post_id, $options['word_limit'], $options['read_more_text'] );
 		$date_html_output .= '</a>';
 		
@@ -328,7 +328,7 @@ function mp_stacks_postgrid_date_below_over_callback( $postgrid_output, $grid_po
 	return $postgrid_output;
 	
 }
-add_filter( 'mp_stacks_postgrid_below', 'mp_stacks_postgrid_date_below_over_callback', 14, 3 );
+add_filter( 'mp_stacks_postgrid_below', 'mp_stacks_postgrid_date_below_over_callback', 14, 4 );
 
 /**
  * Add the JS for the date to PostGrid's HTML output

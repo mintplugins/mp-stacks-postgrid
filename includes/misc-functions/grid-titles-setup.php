@@ -310,12 +310,12 @@ add_filter( 'mp_stacks_postgrid_bottom_over', 'mp_stacks_postgrid_title_bottom_o
  * @param    $grid_post_id Int - The ID of the post
  * @return   $html_output String - A string holding the html for text over a featured image in the grid
  */
-function mp_stacks_postgrid_title_below_over_callback( $postgrid_output, $grid_post_id, $options ){
+function mp_stacks_postgrid_title_below_over_callback( $postgrid_output, $grid_post_id, $brick_id, $options ){
 	
 	//If we should show the title below the image
 	if ( strpos( $options['title_placement'], 'below') !== false && $options['title_show']){
 		
-		$title_html_output = '<a href="' . apply_filters( 'mp_stacks_postgrid_grid_post_permalink', get_permalink(), $grid_post_id ) . '" class="mp-stacks-postgrid-title-link">';	
+		$title_html_output = '<a href="' . apply_filters( 'mp_stacks_postgrid_grid_post_permalink', get_permalink(), $grid_post_id, $brick_id ) . '" class="mp-stacks-postgrid-title-link ' . apply_filters( 'mp_stacks_postgrid_grid_postlink_classes', NULL, $grid_post_id ) . '">';	
 			$title_html_output .= mp_stacks_postgrid_title( $grid_post_id );
 		$title_html_output .= '</a>';
 		
@@ -325,7 +325,7 @@ function mp_stacks_postgrid_title_below_over_callback( $postgrid_output, $grid_p
 	return $postgrid_output;
 	
 }
-add_filter( 'mp_stacks_postgrid_below', 'mp_stacks_postgrid_title_below_over_callback', 10, 3 );
+add_filter( 'mp_stacks_postgrid_below', 'mp_stacks_postgrid_title_below_over_callback', 10, 4 );
 
 /**
  * Add the JS for the title to PostGrid's HTML output

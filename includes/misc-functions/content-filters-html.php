@@ -348,7 +348,7 @@ function mp_stacks_postgrid_output( $post_id, $post_offset = NULL ){
 							$postgrid_output .= '<div class="mp-stacks-grid-item-image-overlay"></div>';
 							
 							//Output the link for this postgrid post.
-							$postgrid_output .= '<a href="' . apply_filters( 'mp_stacks_postgrid_grid_post_permalink', get_permalink(), $grid_post_id ) . '" class="mp-stacks-grid-image-link">';
+							$postgrid_output .= '<a href="' . apply_filters( 'mp_stacks_postgrid_grid_post_permalink', get_permalink(), $grid_post_id, $post_id ) . '" class="mp-stacks-grid-image-link ' . apply_filters( 'mp_stacks_postgrid_grid_postlink_classes', NULL, $grid_post_id ) . '">';
 							
 							//Get the featured image and crop according to the user's specs
 							if ( $postgrid_featured_images_height > 0 && !empty( $postgrid_featured_images_height ) ){
@@ -415,7 +415,7 @@ function mp_stacks_postgrid_output( $post_id, $post_offset = NULL ){
 					}
 					
 					//Filter Hook to output HTML into the "Below" position on the featured Image
-					$postgrid_below = apply_filters( 'mp_stacks_postgrid_below', NULL, $grid_post_id, $grid_placement_options );
+					$postgrid_below = apply_filters( 'mp_stacks_postgrid_below', NULL, $grid_post_id, $post_id, $grid_placement_options );
 						
 					if ( !empty( $postgrid_below ) ){
 						//Below Image Area Container:

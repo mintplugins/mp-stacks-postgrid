@@ -355,12 +355,12 @@ add_filter( 'mp_stacks_postgrid_bottom_over', 'mp_stacks_postgrid_excerpt_bottom
  * @param    $grid_post_id Int - The ID of the post
  * @return   $html_output String - A string holding the html for text over a featured image in the grid
  */
-function mp_stacks_postgrid_excerpt_below_over_callback( $postgrid_output, $grid_post_id, $options ){
+function mp_stacks_postgrid_excerpt_below_over_callback( $postgrid_output, $grid_post_id, $brick_id, $options ){
 	
 	//If we should show the excerpt below the image
 	if ( strpos( $options['excerpt_placement'], 'below') !== false && $options['excerpt_show']){
 		
-		$excerpt_html_output = '<a href="' . apply_filters( 'mp_stacks_postgrid_grid_post_permalink', get_permalink(), $grid_post_id ) . '" class="mp-stacks-postgrid-excerpt-link">';	
+		$excerpt_html_output = '<a href="' . apply_filters( 'mp_stacks_postgrid_grid_post_permalink', get_permalink(), $grid_post_id, $brick_id ) . '" class="mp-stacks-postgrid-excerpt-link ' . apply_filters( 'mp_stacks_postgrid_grid_postlink_classes', NULL, $grid_post_id ) . '">';	
 			$excerpt_html_output .= mp_stacks_postgrid_excerpt( $grid_post_id, $options['word_limit'], $options['read_more_text'] );
 		$excerpt_html_output .= '</a>';
 		
@@ -370,7 +370,7 @@ function mp_stacks_postgrid_excerpt_below_over_callback( $postgrid_output, $grid
 	return $postgrid_output;
 	
 }
-add_filter( 'mp_stacks_postgrid_below', 'mp_stacks_postgrid_excerpt_below_over_callback', 15, 3 );
+add_filter( 'mp_stacks_postgrid_below', 'mp_stacks_postgrid_excerpt_below_over_callback', 15, 4 );
 
 /**
  * Add the JS for the excerpt to PostGrid's HTML output
