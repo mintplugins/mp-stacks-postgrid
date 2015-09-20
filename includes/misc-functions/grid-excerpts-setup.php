@@ -161,9 +161,9 @@ function mp_stacks_postgrid_excerpt_meta_options( $items_array ){
 		'postgrid_excerpt_read_more_text' => array(
 			'field_id'			=> 'postgrid_excerpt_read_more_text',
 			'field_title' 	=> __( '"Read More" Text for Excerpt\'s', 'mp_stacks_postgrid'),
-			'field_description' 	=> __( 'What should the "Read More" text be at the end of the Excerpt? Default: "[Read More]". For no output type "*****" (5 asterisks).', 'mp_stacks_postgrid' ),
+			'field_description' 	=> __( 'What should the "Read More" text be at the end of the Excerpt?', 'mp_stacks_postgrid' ),
 			'field_type' 	=> 'textbox',
-			'field_value' => __( '[Read More]', 'mp_stacks_postgrid' ),
+			'field_value' => __( '', 'mp_stacks_postgrid' ),
 			'field_showhider' => 'postgrid_excerpt_settings',
 		),
 		//Excerpt Background
@@ -235,7 +235,7 @@ function mp_stacks_postgrid_excerpt_placement_options( $placement_options, $post
 	$placement_options['word_limit'] = mp_core_get_post_meta($post_id, 'postgrid_excerpt_word_limit', 20);
 	
 	//Get Read More Text for excerpts
-	$placement_options['read_more_text'] = mp_core_get_post_meta($post_id, 'postgrid_excerpt_read_more_text', __( '[Read More]', 'mp_stacks_postgrid' ) );
+	$placement_options['read_more_text'] = mp_core_get_post_meta($post_id, 'postgrid_excerpt_read_more_text', '' );
 	
 	return $placement_options;	
 }
@@ -360,7 +360,7 @@ function mp_stacks_postgrid_excerpt_below_over_callback( $postgrid_output, $grid
 	//If we should show the excerpt below the image
 	if ( strpos( $options['excerpt_placement'], 'below') !== false && $options['excerpt_show']){
 		
-		$excerpt_html_output = '<a href="' . apply_filters( 'mp_stacks_postgrid_grid_post_permalink', get_permalink(), $grid_post_id, $brick_id ) . '" class="mp-stacks-postgrid-excerpt-link ' . apply_filters( 'mp_stacks_postgrid_grid_postlink_classes', NULL, $grid_post_id ) . '">';	
+		$excerpt_html_output = '<a href="' . apply_filters( 'mp_stacks_postgrid_grid_post_permalink', get_permalink(), $grid_post_id, $brick_id ) . '" class="mp-stacks-postgrid-excerpt-link ' . apply_filters( 'mp_stacks_postgrid_grid_postlink_classes', NULL, $grid_post_id, $brick_id ) . '">';	
 			$excerpt_html_output .= mp_stacks_postgrid_excerpt( $grid_post_id, $options['word_limit'], $options['read_more_text'] );
 		$excerpt_html_output .= '</a>';
 		
@@ -389,7 +389,7 @@ function mp_stacks_postgrid_excerpt_animation_js( $existing_filter_output, $post
 	}
 		
 	//Get JS output to animate the excerpts on mouse over and out
-	$excerpt_animation_js = mp_core_js_mouse_over_animate_child( '#mp-brick-' . $post_id . ' .mp-stacks-grid-item', '.mp-stacks-postgrid-item-excerpt-holder', mp_core_get_post_meta( $post_id, 'postgrid_excerpt_animation_keyframes', array() ) ); 
+	$excerpt_animation_js = mp_core_js_mouse_over_animate_child( '#mp-brick-' . $post_id . ' .mp-stacks-grid-item', '.mp-stacks-postgrid-item-excerpt-holder', mp_core_get_post_meta( $post_id, 'postgrid_excerpt_animation_keyframes', array() ), true, true, 'mp-brick-' . $post_id ); 
 
 	return $existing_filter_output .= $excerpt_animation_js;
 }

@@ -318,7 +318,7 @@ function mp_stacks_postgrid_date_below_over_callback( $postgrid_output, $grid_po
 	//If we should show the date below the image
 	if ( strpos( $options['date_placement'], 'below') !== false && $options['date_show']){
 		
-		$date_html_output = '<a href="' . apply_filters( 'mp_stacks_postgrid_grid_post_permalink', get_permalink(), $grid_post_id, $brick_id ) . '" class="mp-stacks-postgrid-date-link ' . apply_filters( 'mp_stacks_postgrid_grid_postlink_classes', NULL, $grid_post_id ) . '">';	
+		$date_html_output = '<a href="' . apply_filters( 'mp_stacks_postgrid_grid_post_permalink', get_permalink(), $grid_post_id, $brick_id ) . '" class="mp-stacks-postgrid-date-link ' . apply_filters( 'mp_stacks_postgrid_grid_postlink_classes', NULL, $grid_post_id, $brick_id ) . '">';	
 			$date_html_output .= mp_stacks_postgrid_date( $grid_post_id, $options['word_limit'], $options['read_more_text'] );
 		$date_html_output .= '</a>';
 		
@@ -347,7 +347,7 @@ function mp_stacks_postgrid_date_animation_js( $existing_filter_output, $post_id
 	}
 	
 	//Get JS output to animate the dates on mouse over and out
-	$date_animation_js = mp_core_js_mouse_over_animate_child( '#mp-brick-' . $post_id . ' .mp-stacks-grid-item', '.mp-stacks-postgrid-item-date-holder', mp_core_get_post_meta( $post_id, 'postgrid_date_animation_keyframes', array() ) ); 
+	$date_animation_js = mp_core_js_mouse_over_animate_child( '#mp-brick-' . $post_id . ' .mp-stacks-grid-item', '.mp-stacks-postgrid-item-date-holder', mp_core_get_post_meta( $post_id, 'postgrid_date_animation_keyframes', array() ), true, true, 'mp-brick-' . $post_id ); 
 	
 	return $existing_filter_output .= $date_animation_js;
 }
