@@ -3,8 +3,8 @@ Contributors: johnstonphilip
 Donate link: http://mintplugins.com/
 Tags: message bar, header
 Requires at least: 3.5
-Tested up to: 4.1
-Stable tag: 1.0.1.5
+Tested up to: 4.3
+Stable tag: 1.0.1.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -32,6 +32,12 @@ See full instructions at http://mintplugins.com/doc/mp-stacks
 
 
 == Changelog ==
+
+= 1.0.1.6 = September 20, 2015
+* Front End Scripts now enqueued only when needed.
+* Added jQuery namespace for animations.
+* Admin Meta Scripts now enqueued only when needed.
+* Brick Metabox controls now load using ajax.
 
 = 1.0.1.5 = May 31, 2015
 * Added brick ID to permalink filter (mp_stacks_postgrid_grid_post_permalink) for context
