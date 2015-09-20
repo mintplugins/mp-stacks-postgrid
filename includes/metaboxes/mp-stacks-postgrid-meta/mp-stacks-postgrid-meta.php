@@ -32,19 +32,38 @@ function mp_stacks_postgrid_create_meta_box(){
 		'metabox_title' => __( '"PostGrid" Content-Type', 'mp_stacks_postgrid'), 
 		'metabox_posttype' => 'mp_brick', 
 		'metabox_context' => 'advanced', 
-		'metabox_priority' => 'low' 
+		'metabox_priority' => 'low' ,
+		'metabox_content_via_ajax' => true,
 	);
 	
 	
 	//If there is a post id, filter the type of taxonomy so people can make it use their own
 	if ( isset( $_GET['post'] ) ){
+		
+		//Filter the taxonomy slug so people can use their own taxonomies
+		$post_taxonomy_slug = apply_filters( 'mp_stacks_postgrid_main_tax_slug', 'category', $_GET['post'] );
+		
 		//All tax terms in the category taxonomy
-		$all_tax_terms = mp_core_get_all_terms_by_tax( apply_filters( 'mp_stacks_postgrid_main_tax_slug', 'category', $_GET['post'] ) );
+		$all_tax_terms = mp_core_get_all_terms_by_tax( $post_taxonomy_slug );
+		
 	}
 	else{
-		//All tax terms in the category taxonomy
-		$all_tax_terms = mp_core_get_all_terms_by_tax( 'category' );
+		
+		//Add "All" as the first option for sources for this grid
+		$all_tax_terms['all'] = __( 'All Posts', 'mp_stacks_postgrid' );
+			
+		$get_post_categories = mp_core_get_all_terms_by_tax( 'category' ); 
+		
+		//Loop through each category
+		foreach( $get_post_categories as $term_id => $term_name ){
+			//Add the event category to the list of source options for this grid
+			$all_tax_terms[$term_id] = $term_name;
+		}
+	
 	}
+	
+	//Create the correct "Manage Posts" link
+	$manage_posts_link = admin_url( 'edit.php?post_type=post' );
 	
 	//Add "Related Posts" Option
 	$all_tax_terms['related_posts'] = __('Show Related Posts based on Tag (only use this if the stack is sitting on a "Post").');
@@ -68,7 +87,7 @@ function mp_stacks_postgrid_create_meta_box(){
 			'postgrid_taxonomy_terms' => array(
 				'field_id'			=> 'taxonomy_term',
 				'field_title' 	=> __( 'Select a Category or Tag you want to show', 'mp_stacks_postgrid'),
-				'field_description' 	=> __( 'What posts should be shown in the postgrid?', 'mp_stacks_postgrid' ),
+				'field_description' 	=> __( 'What posts should be shown in the postgrid?', 'mp_stacks_postgrid' ) . ' (<a href="' . $manage_posts_link . '" target="_blank">' . __( 'Manage Posts', 'mp_stacks_postgrid' ) . '</a>)',
 				'field_type' 	=> 'select',
 				'field_value' => '',
 				'field_select_values' => $all_tax_terms,
@@ -426,4 +445,5 @@ function mp_stacks_postgrid_create_meta_box(){
 	global $mp_stacks_postgrid_meta_box;
 	$mp_stacks_postgrid_meta_box = new MP_CORE_Metabox($mp_stacks_postgrid_add_meta_box, $mp_stacks_postgrid_items_array);
 }
-add_action('mp_brick_metabox', 'mp_stacks_postgrid_create_meta_box');
+add_action('mp_brick_ajax_metabox', 'mp_stacks_postgrid_create_meta_box');
+add_action('wp_ajax_mp_stacks_postgrid_metabox_content', 'mp_stacks_postgrid_create_meta_box');
