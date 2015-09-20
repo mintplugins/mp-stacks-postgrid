@@ -13,7 +13,7 @@
  */
  
 /**
- * This function hooks to the brick output. If it is supposed to be a 'postgrid', then it will output the postgrid
+ * This function hooks to the brick output. If it is supposed to be a 'postgrid', then it will output the postgrid.
  *
  * @access   public
  * @since    1.0.0
@@ -54,7 +54,7 @@ function mp_postgrid_ajax_load_more(){
 	$post_offset = $_POST['mp_stacks_grid_offset'];
 
 	//Because we run the same function for this and for "Load More" ajax, we call a re-usable function which returns the output
-	$postgrid_output = mp_stacks_postgrid_output( $post_id, $post_offset );
+	$postgrid_output = mp_stacks_postgrid_output( $post_id, true, $post_offset );
 	
 	echo json_encode( array(
 		'items' => $postgrid_output['postgrid_output'],
@@ -75,26 +75,24 @@ add_action( 'wp_ajax_nopriv_mp_stacks_postgrid_load_more', 'mp_postgrid_ajax_loa
  * @since    1.0.0
  * @param    Void
  * @param    $post_id Int - The ID of the Brick
+ * @param    $loading_more string - If we are loading more through ajax, this will be true, Defaults to false.
  * @param    $post_offset Int - The number of posts deep we are into the loop (if doing ajax). If not doing ajax, set this to 0;
  * @return   Array - HTML output from the Grid Loop, The Load More Button, and the Animation Trigger in an array for usage in either ajax or not.
  */
-function mp_stacks_postgrid_output( $post_id, $post_offset = NULL ){
+function mp_stacks_postgrid_output( $post_id, $loading_more = false, $post_offset = NULL ){
 	
 	global $wp_query;
 	
-	//Start up the PHP session if there isn't one already
-	if ( !isset( $_SESSION ) ) {
-	   session_start();
-	}
+	//Enqueue all js scripts used by grids.
+	mp_stacks_grids_enqueue_frontend_scripts( 'postgrid' );
 	
 	//If we are NOT doing ajax get the parent's post id from the wp_query.
 	if ( !defined( 'DOING_AJAX' ) ){
 		$queried_object_id = $wp_query->queried_object_id;
-		$_SESSION['mp_stacks_downloadgrid_queryobjid_' . $post_id] = $queried_object_id;
 	}
-	//If we are doing ajax, get the parent's post id from the PHP session where it was stored on initial the page load.
+	//If we are doing ajax, get the parent's post id from the AJAX-passed $_POST['mp_stacks_queried_object_id']
 	else{
-		$queried_object_id = $_SESSION['mp_stacks_downloadgrid_queryobjid_' . $post_id];
+		$queried_object_id = isset( $_POST['mp_stacks_queried_object_id'] ) ? $_POST['mp_stacks_queried_object_id'] : NULL;
 	}
 	
 	//Get this Brick Info
@@ -148,40 +146,44 @@ function mp_stacks_postgrid_output( $post_id, $post_offset = NULL ){
 	//If there are tax terms selected to show (the "new" way with multiple terms)
 	if ( is_array( $postgrid_taxonomy_terms ) && !empty( $postgrid_taxonomy_terms[0]['taxonomy_term'] ) ){
 		
-		//Loop through each term the user added to this postgrid
-		foreach( $postgrid_taxonomy_terms as $postgrid_taxonomy_term ){
-			
-			//If we should show related posts
-			if ( $postgrid_taxonomy_term['taxonomy_term'] == 'related_posts' ){
+		//If the selection for category is "all", we don't need to add anything extra to the qeury
+		if ( $postgrid_taxonomy_terms[0]['taxonomy_term'] != 'all' ){
 				
-				$tags = wp_get_post_terms( $queried_object_id, apply_filters( 'mp_stacks_postgrid_related_posts_tax_slug', 'post_tag', $post_id ) );
+			//Loop through each term the user added to this postgrid
+			foreach( $postgrid_taxonomy_terms as $postgrid_taxonomy_term ){
 				
-				if ( is_object( $tags ) ){
-					$tags_array = $tags;
+				//If we should show related posts
+				if ( $postgrid_taxonomy_term['taxonomy_term'] == 'related_posts' ){
+					
+					$tags = wp_get_post_terms( $queried_object_id, apply_filters( 'mp_stacks_postgrid_related_posts_tax_slug', 'post_tag', $post_id ) );
+					
+					if ( is_object( $tags ) ){
+						$tags_array = $tags;
+					}
+					elseif (is_array( $tags ) ){
+						$tags_array = isset( $tags[0] ) ? $tags[0] : NULL;
+					}
+					
+					$tag_slugs = wp_get_post_terms( $queried_object_id, apply_filters( 'mp_stacks_postgrid_related_posts_tax_slug', 'post_tag', $post_id ), array("fields" => "slugs") );
+					
+					//Add the related tags as a tax_query to the WP_Query
+					$postgrid_args['tax_query'][] = array(
+						'taxonomy' => apply_filters( 'mp_stacks_postgrid_related_posts_tax_slug', 'post_tag', $post_id ),
+						'field'    => 'slug',
+						'terms'    => $tag_slugs,
+					);
+								
 				}
-				elseif (is_array( $tags ) ){
-					$tags_array = isset( $tags[0] ) ? $tags[0] : NULL;
+				else{
+					
+					//Add this term to the tax_query
+					$postgrid_args['tax_query'][] = array(
+						'taxonomy' => apply_filters( 'mp_stacks_postgrid_main_tax_slug', 'category', $post_id ),
+						'field'    => 'id',
+						'terms'    => $postgrid_taxonomy_term['taxonomy_term'],
+						'operator' => 'IN'
+					);
 				}
-				
-				$tag_slugs = wp_get_post_terms( $queried_object_id, apply_filters( 'mp_stacks_postgrid_related_posts_tax_slug', 'post_tag', $post_id ), array("fields" => "slugs") );
-				
-				//Add the related tags as a tax_query to the WP_Query
-				$postgrid_args['tax_query'][] = array(
-					'taxonomy' => apply_filters( 'mp_stacks_postgrid_related_posts_tax_slug', 'post_tag', $post_id ),
-					'field'    => 'slug',
-					'terms'    => $tag_slugs,
-				);
-							
-			}
-			else{
-				
-				//Add this term to the tax_query
-				$postgrid_args['tax_query'][] = array(
-					'taxonomy' => apply_filters( 'mp_stacks_postgrid_main_tax_slug', 'category', $post_id ),
-					'field'    => 'id',
-					'terms'    => $postgrid_taxonomy_term['taxonomy_term'],
-					'operator' => 'IN'
-				);
 			}
 		}
 	}
@@ -243,14 +245,14 @@ function mp_stacks_postgrid_output( $post_id, $post_offset = NULL ){
 	$postgrid_featured_images_show = mp_core_get_post_meta_checkbox($post_id, 'postgrid_featured_images_show', true);
 	
 	//Download Image width and height
-	$postgrid_featured_images_width = mp_core_get_post_meta( $post_id, 'postgrid_featured_images_width', '300' );
-	$postgrid_featured_images_height = mp_core_get_post_meta( $post_id, 'postgrid_featured_images_height', '200' );
+	$postgrid_featured_images_width = mp_core_get_post_meta( $post_id, 'postgrid_featured_images_width', '500' );
+	$postgrid_featured_images_height = mp_core_get_post_meta( $post_id, 'postgrid_featured_images_height', 0 );
 	
 	//Get the options for the grid placement - we pass this to the action filters for text placement
 	$grid_placement_options = apply_filters( 'mp_stacks_postgrid_placement_options', NULL, $post_id );
 		
 	//Get the JS for animating items - only needed the first time we run this - not on subsequent Ajax requests.
-	if ( !defined('DOING_AJAX') ){
+	if ( !$loading_more ){
 		
 		//Here we set javascript for this grid
 		$postgrid_output .= apply_filters( 'mp_stacks_grid_js', NULL, $post_id, 'postgrid' );
@@ -258,10 +260,10 @@ function mp_stacks_postgrid_output( $post_id, $post_offset = NULL ){
 	}
 	
 	//Add HTML that sits before the "grid" div
-	$postgrid_output .= !defined('DOING_AJAX') ? apply_filters( 'mp_stacks_grid_before', NULL, $post_id, 'postgrid', $postgrid_taxonomy_terms ) : NULL; 
+	$postgrid_output .= !$loading_more ? apply_filters( 'mp_stacks_grid_before', NULL, $post_id, 'postgrid', $postgrid_taxonomy_terms ) : NULL; 
 		
 	//Get Download Output
-	$postgrid_output .= !defined('DOING_AJAX') ? '<div class="mp-stacks-grid ' . apply_filters( 'mp_stacks_grid_classes', NULL, $post_id, 'postgrid' ) . '">' : NULL;
+	$postgrid_output .= !$loading_more ? '<div class="mp-stacks-grid ' . apply_filters( 'mp_stacks_grid_classes', NULL, $post_id, 'postgrid' ) . '">' : NULL;
 		
 	//Create new query for stacks
 	$postgrid_query = new WP_Query( apply_filters( 'postgrid_args', $postgrid_args ) );
@@ -344,11 +346,11 @@ function mp_stacks_postgrid_output( $post_id, $post_offset = NULL ){
 					if ($postgrid_featured_images_show){
 						
 						$postgrid_output .= '<div class="mp-stacks-grid-item-image-holder">';
-						
-							$postgrid_output .= '<div class="mp-stacks-grid-item-image-overlay"></div>';
 							
 							//Output the link for this postgrid post.
-							$postgrid_output .= '<a href="' . apply_filters( 'mp_stacks_postgrid_grid_post_permalink', get_permalink(), $grid_post_id, $post_id ) . '" class="mp-stacks-grid-image-link ' . apply_filters( 'mp_stacks_postgrid_grid_postlink_classes', NULL, $grid_post_id ) . '">';
+							$postgrid_output .= '<a href="' . apply_filters( 'mp_stacks_postgrid_grid_post_permalink', get_permalink(), $grid_post_id, $post_id ) . '" class="mp-stacks-grid-image-link ' . apply_filters( 'mp_stacks_postgrid_grid_postlink_classes', NULL, $grid_post_id, $post_id ) . '">';
+							
+							$postgrid_output .= '<div class="mp-stacks-grid-item-image-overlay"></div>';
 							
 							//Get the featured image and crop according to the user's specs
 							if ( $postgrid_featured_images_height > 0 && !empty( $postgrid_featured_images_height ) ){
@@ -436,7 +438,7 @@ function mp_stacks_postgrid_output( $post_id, $post_offset = NULL ){
 	}
 	
 	//If we're not doing ajax, add the stuff to close the postgrid container and items needed after
-	if ( !defined('DOING_AJAX') ){
+	if ( !$loading_more ){
 		$postgrid_output .= '</div>';
 	}
 	
