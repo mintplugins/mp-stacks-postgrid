@@ -141,7 +141,7 @@ function mp_stacks_postgrid_include_files(){
 		/**
 		 * enqueue scripts
 		 */
-		require( MP_STACKS_POSTGRID_PLUGIN_DIR . 'includes/misc-functions/enqueue-scripts.php' );
+		require( MP_STACKS_POSTGRID_PLUGIN_DIR . 'includes/misc-functions/admin-enqueue-scripts.php' );
 		
 		/**
 		 * HTML Content Filters for postgrid
