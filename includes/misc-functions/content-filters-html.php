@@ -320,7 +320,7 @@ function mp_stacks_postgrid_output( $post_id, $loading_more = false, $post_offse
 				//Add our custom classes to the grid-item 
 				$class_string = 'mp-stacks-grid-source-' . $post_source_num . ' mp-stacks-grid-item mp-stacks-grid-item-' . $grid_post_id . ' ';
 				//Add all posts that would be added from the post_class wp function as well
-				$class_string = join( ' ', get_post_class( $class_string, $grid_post_id ) );
+				$class_string = str_replace( 'hentry', '', join( ' ', get_post_class( $class_string, $grid_post_id ) ) );
 				$class_string = apply_filters( 'mp_stacks_grid_item_classes', $class_string, $post_id, 'postgrid' ); 
 								
 				//Get the Grid Item Attributes
