@@ -4,7 +4,7 @@ Donate link: http://mintplugins.com/
 Tags: message bar, header
 Requires at least: 3.5
 Tested up to: 4.3
-Stable tag: 1.0.1.6
+Stable tag: 1.0.1.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -32,6 +32,9 @@ See full instructions at http://mintplugins.com/doc/mp-stacks
 
 
 == Changelog ==
+
+= 1.0.1.7 = September 22, 2015
+* Removed 'hentry' from postgrid posts. Some themes use this class to add extra styling - which is properly done by the postgrid CSS controls.
 
 = 1.0.1.6 = September 20, 2015
 * Front End Scripts now enqueued only when needed.
