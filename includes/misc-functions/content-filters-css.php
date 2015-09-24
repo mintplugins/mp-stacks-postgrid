@@ -59,12 +59,11 @@ function mp_stacks_brick_content_output_css_postgrid( $css_output, $post_id, $fi
 	$postgrid_post_below_image_area_inner_margin = mp_core_get_post_meta( $post_id, 'postgrid_post_below_image_area_inner_margin', '0' );
 
 	
-	//Get CSS Output
-	
+	//Get CSS Output	
 	$css_output .= '
 	#mp-brick-' . $post_id . ' .mp-stacks-grid-item{' . 
 			mp_core_css_line( 'color', $default_text_color ) . 
-			mp_core_css_line( 'width', round((100/$postgrid_per_row), 1), '%' ) . 
+			mp_core_css_line( 'width', mp_stacks_grid_posts_per_row_percentage( $postgrid_per_row ), '%' ) . 
 			mp_core_css_line( 'padding', $postgrid_post_spacing, 'px' ) . 
 	'}
 	#mp-brick-' . $post_id . ' .mp-stacks-grid-item-inner{' . 
