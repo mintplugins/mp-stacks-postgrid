@@ -142,72 +142,95 @@ function mp_stacks_postgrid_output( $post_id, $loading_more = false, $post_offse
 			$postgrid_args['orderby'] = 'rand';
 			break;
 	}
+	
+	//Check the load more behavior to make sure it ins't pagination
+	$load_more_behaviour = mp_core_get_post_meta($post_id, 'postgrid' . '_load_more_behaviour', 'ajax_load_more' );
+	
+	//If we are loading from scratch based on a user's selection AND we are not using pagination as the "Load More" style (which won't work with this type of filtering)
+	if ( isset( $_POST['mp_stacks_grid_filter_tax'] ) && !empty( $_POST['mp_stacks_grid_filter_tax'] ) && isset( $_POST['mp_stacks_grid_filter_term'] ) && !empty( $_POST['mp_stacks_grid_filter_term'] ) && $load_more_behaviour != 'pagination' ){
 		
-	//If there are tax terms selected to show (the "new" way with multiple terms)
-	if ( is_array( $postgrid_taxonomy_terms ) && !empty( $postgrid_taxonomy_terms[0]['taxonomy_term'] ) ){
+		$user_chosen_tax = $_POST['mp_stacks_grid_filter_tax'];
+		$user_chosen_term = $_POST['mp_stacks_grid_filter_term'];
 		
-		//If the selection for category is "all", we don't need to add anything extra to the qeury
-		if ( $postgrid_taxonomy_terms[0]['taxonomy_term'] != 'all' ){
-				
-			//Loop through each term the user added to this postgrid
-			foreach( $postgrid_taxonomy_terms as $postgrid_taxonomy_term ){
-				
-				//If we should show related posts
-				if ( $postgrid_taxonomy_term['taxonomy_term'] == 'related_posts' ){
+		if ( !empty( $user_chosen_tax ) && !empty( $user_chosen_term ) ){
+		
+			//Add the user chosen tax and term as a tax_query to the WP_Query
+			$postgrid_args['tax_query'][] = array(
+				'taxonomy' => $user_chosen_tax,
+				'field'    => 'slug',
+				'terms'    => $user_chosen_term,
+			);
+		
+		}
 					
-					$tags = wp_get_post_terms( $queried_object_id, apply_filters( 'mp_stacks_postgrid_related_posts_tax_slug', 'post_tag', $post_id ) );
+	}	
+	else{
+		//If there are tax terms selected to show (the "new" way with multiple terms)
+		if ( is_array( $postgrid_taxonomy_terms ) && !empty( $postgrid_taxonomy_terms[0]['taxonomy_term'] ) ){
+			
+			//If the selection for category is "all", we don't need to add anything extra to the qeury
+			if ( $postgrid_taxonomy_terms[0]['taxonomy_term'] != 'all' ){
 					
-					if ( is_object( $tags ) ){
-						$tags_array = $tags;
+				//Loop through each term the user added to this postgrid
+				foreach( $postgrid_taxonomy_terms as $postgrid_taxonomy_term ){
+					
+					//If we should show related posts
+					if ( $postgrid_taxonomy_term['taxonomy_term'] == 'related_posts' ){
+						
+						$tags = wp_get_post_terms( $queried_object_id, apply_filters( 'mp_stacks_postgrid_related_posts_tax_slug', 'post_tag', $post_id ) );
+						
+						if ( is_object( $tags ) ){
+							$tags_array = $tags;
+						}
+						elseif (is_array( $tags ) ){
+							$tags_array = isset( $tags[0] ) ? $tags[0] : NULL;
+						}
+						
+						$tag_slugs = wp_get_post_terms( $queried_object_id, apply_filters( 'mp_stacks_postgrid_related_posts_tax_slug', 'post_tag', $post_id ), array("fields" => "slugs") );
+						
+						//Add the related tags as a tax_query to the WP_Query
+						$postgrid_args['tax_query'][] = array(
+							'taxonomy' => apply_filters( 'mp_stacks_postgrid_related_posts_tax_slug', 'post_tag', $post_id ),
+							'field'    => 'slug',
+							'terms'    => $tag_slugs,
+						);
+									
 					}
-					elseif (is_array( $tags ) ){
-						$tags_array = isset( $tags[0] ) ? $tags[0] : NULL;
+					else{
+						
+						//Add this term to the tax_query
+						$postgrid_args['tax_query'][] = array(
+							'taxonomy' => apply_filters( 'mp_stacks_postgrid_main_tax_slug', 'category', $post_id ),
+							'field'    => 'id',
+							'terms'    => $postgrid_taxonomy_term['taxonomy_term'],
+							'operator' => 'IN'
+						);
 					}
-					
-					$tag_slugs = wp_get_post_terms( $queried_object_id, apply_filters( 'mp_stacks_postgrid_related_posts_tax_slug', 'post_tag', $post_id ), array("fields" => "slugs") );
-					
-					//Add the related tags as a tax_query to the WP_Query
-					$postgrid_args['tax_query'][] = array(
-						'taxonomy' => apply_filters( 'mp_stacks_postgrid_related_posts_tax_slug', 'post_tag', $post_id ),
-						'field'    => 'slug',
-						'terms'    => $tag_slugs,
-					);
-								
-				}
-				else{
-					
-					//Add this term to the tax_query
-					$postgrid_args['tax_query'][] = array(
-						'taxonomy' => apply_filters( 'mp_stacks_postgrid_main_tax_slug', 'category', $post_id ),
-						'field'    => 'id',
-						'terms'    => $postgrid_taxonomy_term['taxonomy_term'],
-						'operator' => 'IN'
-					);
 				}
 			}
 		}
-	}
-	//if there is a single tax term to show (this is backward compatibility for before the terms selector was repeatable).
-	else if( !empty( $postgrid_taxonomy_term ) ){
-		
-		//Get PostGrid Metabox Repeater Array
-		$termid_taxname = explode( '*', $postgrid_taxonomy_term );
-		
-		if ( !isset( $termid_taxname[1] ) || !isset( $termid_taxname[0] ) ){
-			return;	
-		}
+		//if there is a single tax term to show (this is backward compatibility for before the terms selector was repeatable).
+		else if( !empty( $postgrid_taxonomy_term ) ){
 			
-		//Add this term to the tax_query
-		$postgrid_args['tax_query'][] = array(
-			'taxonomy' => $termid_taxname[1],
-			'field'    => 'id',
-			'terms'    => $termid_taxname[0],
-			'operator' => 'IN'
-		);
-	}
-	//Otherwise there's nothing to show so get out of here
-	else{
-		return false;	
+			//Get PostGrid Metabox Repeater Array
+			$termid_taxname = explode( '*', $postgrid_taxonomy_term );
+			
+			if ( !isset( $termid_taxname[1] ) || !isset( $termid_taxname[0] ) ){
+				return;	
+			}
+				
+			//Add this term to the tax_query
+			$postgrid_args['tax_query'][] = array(
+				'taxonomy' => $termid_taxname[1],
+				'field'    => 'id',
+				'terms'    => $termid_taxname[0],
+				'operator' => 'IN'
+			);
+		}
+		//Otherwise there's nothing to show so get out of here
+		else{
+			return false;	
+		}
 	}
 	
 	//If we are using Offset
@@ -263,7 +286,7 @@ function mp_stacks_postgrid_output( $post_id, $loading_more = false, $post_offse
 	$postgrid_output .= !$loading_more ? apply_filters( 'mp_stacks_grid_before', NULL, $post_id, 'postgrid', $postgrid_taxonomy_terms ) : NULL; 
 		
 	//Get Download Output
-	$postgrid_output .= !$loading_more ? '<div class="mp-stacks-grid ' . apply_filters( 'mp_stacks_grid_classes', NULL, $post_id, 'postgrid' ) . '">' : NULL;
+	$postgrid_output .= !$loading_more ? '<div class="mp-stacks-grid ' . apply_filters( 'mp_stacks_grid_classes', NULL, $post_id, 'postgrid' ) . '" ' . apply_filters( 'mp_stacks_grid_attributes', NULL, $post_id, 'postgrid' ) . '>' : NULL;
 		
 	//Create new query for stacks
 	$postgrid_query = new WP_Query( apply_filters( 'postgrid_args', $postgrid_args ) );
