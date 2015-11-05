@@ -4,7 +4,7 @@ Donate link: http://mintplugins.com/
 Tags: message bar, header
 Requires at least: 3.5
 Tested up to: 4.3
-Stable tag: 1.0.1.8
+Stable tag: 1.0.1.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -32,6 +32,11 @@ See full instructions at http://mintplugins.com/doc/mp-stacks
 
 
 == Changelog ==
+
+= 1.0.1.9 = November 4, 2015
+* Remove Font Awesome and use MP Stacks's version
+* Added "Load From Scratch" Isotope Filter support
+* Added filter for the postgrid's title output "mp_stacks_postgrid_title".
 
 = 1.0.1.8 = September 24, 2015
 * Posts per row are now passed through the mp_stacks_grid_posts_per_row_percentage function.
