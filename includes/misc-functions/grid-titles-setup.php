@@ -230,7 +230,7 @@ function mp_stacks_postgrid_title( $post_id ){
 	
 	$title_html_output = mp_stacks_grid_highlight_text_html( array( 
 		'class_name' => 'mp-stacks-postgrid-item-title',
-		'output_string' => get_the_title( $post_id ), 
+		'output_string' => apply_filters( 'mp_stacks_postgrid_title', get_the_title( $post_id ), $post_id )
 	) );
 	
 	return $title_html_output;
