@@ -12,7 +12,7 @@
  * @package    MP Stacks PostGrid
  * @subpackage Functions
  *
- * @copyright  Copyright (c) 2015, Mint Plugins
+ * @copyright  Copyright (c) 2016, Mint Plugins
  * @license    http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @author     Philip Johnston
  */
@@ -79,6 +79,35 @@ function mp_stacks_postgrid_excerpt_meta_options( $items_array ){
 			'field_value' => '19',
 			'field_showhider' => 'postgrid_excerpt_settings',
 		),
+		
+		'postgrid_excerpt_google_font' => array(
+			'field_id'			=> 'postgrid_excerpt_google_font',
+			'field_title' 	=> __( 'Google Font Name', 'mp_stacks'),
+			'field_description' 	=> 'Enter the name of the Google Font to use for this Text <br /><a class="button" href="https://www.google.com/fonts" target="_blank">Browse Google Fonts<div  style="margin-top: 3.3px; margin-left: 5px;" class="dashicons dashicons-share-alt2"></div></a>',
+			'field_type' 	=> 'textbox',
+			'field_value' => '',
+			'field_placeholder' => __( 'Google Font Name', 'mp_stacks_googlefonts' ),
+			'field_showhider' => 'postgrid_excerpt_settings',
+		),
+		'postgrid_excerpt_google_font_weight_style' => array(
+			'field_id'			=> 'postgrid_excerpt_google_font_weight_style',
+			'field_title' 	=> __( 'Font Weight/Style', 'mp_stacks'),
+			'field_description' 	=> 'Set the weight of this font (If available for your chosen font)',
+			'field_type' 	=> 'select',
+			'field_select_values' => array( 
+				'100' => 'Thin', 
+				'200' => 'Extra-Light', 
+				'300' => 'Light', 
+				'400' => 'Normal', 
+				'500' => 'Medium', 
+				'600' => 'Semi-Bold', 
+				'700' => 'Bold',
+				'900' => 'Ultra-Bold', 
+			),
+			'field_value' => '',
+			'field_showhider' => 'postgrid_excerpt_settings',
+		),
+		
 		'postgrid_excerpt_spacing' => array(
 			'field_id'			=> 'postgrid_excerpt_spacing',
 			'field_title' 	=> __( 'Excerpts\' Spacing', 'mp_stacks_postgrid'),
@@ -261,16 +290,15 @@ function mp_stacks_postgrid_excerpt( $post_id, $word_limit, $read_more_text = NU
 		$the_excerpt = mp_core_limit_text_to_words($the_excerpt, $word_limit);
 	}
 	
+	$the_excerpt = apply_filters( 'mp_stacks_postgrid_the_excerpt', $the_excerpt, $post_id );
+	
+	$output_string = strip_tags($the_excerpt);
+		
+	$output_string .= !empty( $read_more_text ) ? '<span class="mp-stacks-postgrid-read-more">' . $read_more_text . '</span>' : NULL;
+	
 	//If there are 0 words in this excerpt
 	if (mp_core_word_count($the_excerpt) == 0 ){
 		return NULL;	
-	}
-	else{
-		
-		$output_string = strip_tags($the_excerpt);
-		
-		$output_string .= !empty( $read_more_text ) ? '<span class="mp-stacks-postgrid-read-more">' . $read_more_text . '</span>' : NULL;
-		
 	}
 	
 	$postgrid_output = mp_stacks_grid_highlight_text_html( array( 
@@ -419,3 +447,46 @@ function mp_stacks_postgrid_excerpt_css( $css_output, $post_id ){
 	return $css_output .= mp_stacks_grid_text_css( $post_id, 'postgrid_excerpt', 'mp-stacks-postgrid-item-excerpt', $excerpt_css_defaults );
 }
 add_filter('mp_stacks_postgrid_css', 'mp_stacks_postgrid_excerpt_css', 10, 2);
+
+/**
+ * Add the Google Fonts for the Grid Excerpts
+ *
+ * @param    $css_output          String - The incoming CSS output coming from other things using this filter
+ * @param    $post_id             Int - The post ID of the brick
+ * @param    $first_content_type  String - The first content type chosen for this brick
+ * @param    $second_content_type String - The second content type chosen for this brick
+ * @return   $css_output          String - A string holding the css the brick
+ */
+function mp_stacks_postgrid_excerpt_google_font( $css_output, $post_id, $first_content_type, $second_content_type ){
+	
+	if ( $first_content_type != 'postgrid' && $second_content_type != 'postgrid' ){
+		return $css_output;	
+	}
+	
+	global $mp_stacks_footer_inline_css, $mp_core_font_families;
+	
+	//Default settings for the MP Core Google Font Class
+	$mp_core_google_font_args = array( 'echo_google_font_css' => false, 'wrap_in_style_tags' => false );
+	
+	$postgrid_excerpt_googlefont = mp_core_get_post_meta( $post_id, 'postgrid_excerpt_google_font' );
+	$postgrid_excerpt_googlefontweight = mp_core_get_post_meta( $post_id, 'postgrid_excerpt_google_font_weight_style' );
+	
+	//If a font name has been entered
+	if ( !empty( $postgrid_excerpt_googlefont ) ){
+		
+		//Check if a font extra (weight) has been selected and add it if so.
+		$postgrid_excerpt_googlefontweight = isset($postgrid_excerpt_googlefontweight) && !empty( $postgrid_excerpt_googlefontweight ) ? ':' . $postgrid_excerpt_googlefontweight : NULL;
+		$postgrid_excerpt_googlefont = $postgrid_excerpt_googlefont . $postgrid_excerpt_googlefontweight;
+	
+		//Load the Google Font using the Google Font Class in MP Core
+		new MP_CORE_Font( $postgrid_excerpt_googlefont, $postgrid_excerpt_googlefont, $mp_core_google_font_args );
+		$mp_stacks_footer_inline_css[$postgrid_excerpt_googlefont] = $mp_core_font_families[$postgrid_excerpt_googlefont];
+		
+		//Return the incoming css string plus css to apply this font family to all paragraph tags
+		$css_output .=  '#mp-brick-' . $post_id . ' .mp-stacks-postgrid-item-excerpt, #mp-brick-' . $post_id . ' .mp-stacks-postgrid-item-excerpt * { font-family: \'' . $postgrid_excerpt_googlefont . '\';}';
+	
+	}
+	
+	return $css_output;	
+}
+add_filter('mp_brick_additional_css', 'mp_stacks_postgrid_excerpt_google_font', 10, 4);	
