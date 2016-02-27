@@ -8,7 +8,7 @@
  * @package    MP Stacks PostGrid
  * @subpackage Functions
  *
- * @copyright   Copyright (c) 2015, Mint Plugins
+ * @copyright   Copyright (c) 2016, Mint Plugins
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @author      Philip Johnston
  */
@@ -37,11 +37,14 @@ function mp_stacks_postgrid_create_meta_box(){
 	);
 	
 	
+	$brick_id = isset( $_POST['mp_core_metabox_post_id'] ) ? sanitize_text_field( $_POST['mp_core_metabox_post_id'] ) : NULL;
+	$brick_id = !$brick_id ? isset( $_GET['post'] ) ? $_GET['post'] : NULL : $brick_id;
+	
 	//If there is a post id, filter the type of taxonomy so people can make it use their own
-	if ( isset( $_GET['post'] ) ){
+	if ( $brick_id ){
 		
 		//Filter the taxonomy slug so people can use their own taxonomies
-		$post_taxonomy_slug = apply_filters( 'mp_stacks_postgrid_main_tax_slug', 'category', $_GET['post'] );
+		$post_taxonomy_slug = apply_filters( 'mp_stacks_postgrid_main_tax_slug', 'category', $brick_id );
 		
 		//All tax terms in the category taxonomy
 		$all_tax_terms = mp_core_get_all_terms_by_tax( $post_taxonomy_slug );
