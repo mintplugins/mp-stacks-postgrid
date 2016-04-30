@@ -35,19 +35,26 @@ function mp_stacks_postgrid_create_meta_box(){
 		'metabox_priority' => 'low' ,
 		'metabox_content_via_ajax' => true,
 	);
-	
-	
+
 	$brick_id = isset( $_POST['mp_core_metabox_post_id'] ) ? sanitize_text_field( $_POST['mp_core_metabox_post_id'] ) : NULL;
 	$brick_id = !$brick_id ? isset( $_GET['post'] ) ? $_GET['post'] : NULL : $brick_id;
-	
+
 	//If there is a post id, filter the type of taxonomy so people can make it use their own
 	if ( $brick_id ){
 		
 		//Filter the taxonomy slug so people can use their own taxonomies
 		$post_taxonomy_slug = apply_filters( 'mp_stacks_postgrid_main_tax_slug', 'category', $brick_id );
 		
-		//All tax terms in the category taxonomy
-		$all_tax_terms = mp_core_get_all_terms_by_tax( $post_taxonomy_slug );
+		//Add "All" as the first option for sources for this grid
+		$all_tax_terms['all'] = __( 'All Posts', 'mp_stacks_postgrid' );
+			
+		$get_post_categories = mp_core_get_all_terms_by_tax( $post_taxonomy_slug ); 
+		
+		//Loop through each category
+		foreach( $get_post_categories as $term_id => $term_name ){
+			//Add the event category to the list of source options for this grid
+			$all_tax_terms[$term_id] = $term_name;
+		}
 		
 	}
 	else{
